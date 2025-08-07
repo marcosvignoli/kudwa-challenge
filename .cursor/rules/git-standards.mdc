@@ -1,0 +1,175 @@
+# Git Standards & Commit Guidelines
+
+## Conventional Commit Format
+
+### Commit Message Structure
+```bash
+type(scope): description
+
+# Examples:
+feat(dashboard): add period switching functionality
+fix(charts): resolve mobile rendering issues
+style(ui): apply Kudwa brand colors
+refactor(components): extract reusable chart wrapper
+docs(readme): add setup instructions
+test(utils): add data formatting tests
+```
+
+### Commit Types
+- **feat:** New features or functionality
+- **fix:** Bug fixes and error corrections
+- **style:** Styling changes, formatting, UI updates
+- **refactor:** Code refactoring without changing functionality
+- **docs:** Documentation updates
+- **test:** Adding or updating tests
+- **chore:** Maintenance tasks, dependencies, build updates
+- **perf:** Performance improvements
+- **ci:** CI/CD configuration changes
+
+### Commit Message Best Practices
+- **Use imperative mood** ("add" not "added")
+- **Keep first line under 50 characters**
+- **Start with lowercase** after the type
+- **Be specific and descriptive**
+- **Group related changes** in single commits
+- **Keep commits atomic** - one logical change per commit
+
+## Branch Strategy
+```bash
+# Main branch
+main
+
+# Feature branches
+feat/dashboard-implementation
+feat/report-page
+feat/chart-components
+style/kudwa-branding
+fix/mobile-responsive
+```
+
+## Commit Examples for This Project
+
+### Sprint 1: Project Setup
+```bash
+feat: initialize Next.js project with TypeScript and Tailwind
+feat: add project structure and basic layout
+feat: implement sidebar navigation component
+feat: set up Redux Toolkit store configuration
+feat: add data loading utilities for JSON files
+docs: add README with project setup instructions
+```
+
+### Sprint 2: Dashboard Core
+```bash
+feat(dashboard): add period selector component
+feat(charts): implement reusable chart components with Recharts
+feat(dashboard): add metric cards for financial data
+feat(state): integrate Redux for dashboard state management
+style(ui): apply responsive design for mobile-first approach
+test(components): add unit tests for chart components
+```
+
+### Sprint 3: Report Page & Polish
+```bash
+feat(report): add expandable/collapsible report interface
+feat(report): implement monthly/quarterly/yearly toggle
+style(branding): apply Kudwa brand colors throughout app
+fix(responsive): resolve mobile layout issues
+feat(ui): add loading states and error handling
+style(animations): add smooth transitions and interactions
+```
+
+### Sprint 4: Testing & Optimization
+```bash
+test(utils): add comprehensive unit tests
+test(components): add integration tests for page flows
+perf(charts): optimize chart rendering performance
+refactor(components): extract reusable UI components
+docs(deployment): add deployment instructions
+chore(build): optimize bundle size and performance
+```
+
+## Repository Management
+
+### .gitignore Best Practices
+```gitignore
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Next.js
+.next/
+out/
+build/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+```
+
+### README.md Structure
+```markdown
+# Kudwa Dashboard Challenge
+
+## Description
+A frontend dashboard and reporting interface built with Next.js, TypeScript, and Redux Toolkit.
+
+## Features
+- Sidebar navigation between Dashboard and Report pages
+- Period switching (Monthly/Quarterly/Yearly)
+- Interactive charts with Recharts
+- Expandable report sections
+- Responsive design with Kudwa branding
+
+## Tech Stack
+- Next.js with App Router
+- TypeScript
+- Redux Toolkit
+- Tailwind CSS
+- Recharts
+
+## Setup Instructions
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Run development server: `npm run dev`
+4. Open [http://localhost:3000](http://localhost:3000)
+
+## Deployment
+- Deployed on Vercel: [Live Demo](link)
+- GitHub Repository: [Source Code](link)
+```
+
+## Quality Standards
+- **No direct commits to main branch** - use feature branches
+- **Pull request reviews** for significant changes
+- **Squash commits** when merging feature branches
+- **Keep commit history clean** and logical
+- **Update documentation** with each major feature
+description:
+globs:
+alwaysApply: false
+---

@@ -1,0 +1,244 @@
+# Development Guidelines
+
+## TypeScript & JavaScript Standards
+
+### ES6+ Features
+- Always use **async/await** instead of raw promises
+- Use **arrow functions** for component definitions and callbacks
+- Implement **destructuring** for props and state
+- Use **template literals** for string interpolation
+- Prefer **const** and **let** over **var**
+- Use **spread/rest operators** for immutable updates
+
+### TypeScript Best Practices
+- Define **interfaces** for all component props
+- Use **type unions** for prop variants
+- Implement **generic types** for reusable components
+- Add **strict type checking** for all functions
+- Use **utility types** (Partial, Pick, Omit) when appropriate
+
+### Code Comments & Documentation
+- Add **JSDoc comments** for all component functions
+- Include **inline comments** for complex logic
+- Document **prop interfaces** with descriptions
+- Explain **business logic** in comments
+- Use **TODO comments** for future improvements
+
+## React & Next.js Standards
+
+### Component Architecture
+- Create **reusable components** with clear interfaces
+- Implement **composition over inheritance**
+- Use **custom hooks** for shared logic
+- Follow **single responsibility principle**
+- Implement **proper prop drilling** or context when needed
+
+### Performance Optimization
+- Use **React.memo** for expensive components
+- Implement **useCallback** for function props
+- Use **useMemo** for expensive calculations
+- Optimize **re-renders** with proper dependencies
+- Implement **lazy loading** for large components
+
+### Next.js App Router
+- Use **app directory** structure
+- Implement **server components** where appropriate
+- Use **loading.tsx** for loading states
+- Implement **error.tsx** for error boundaries
+- Follow **Next.js conventions**
+- **Always use Next.js components** like `Link`, `Image`, `Head`
+- Use `next/link` for navigation instead of `<a>` tags
+- Use `next/image` for optimized images
+- Use `next/head` for SEO and meta tags
+
+### State Management with Redux Toolkit
+- Use **Redux Toolkit** for global state management
+- Implement **slices** for different data domains (dashboard, reports)
+- Use **createSlice** for reducer and actions
+- Implement **createAsyncThunk** for async operations
+- Use **useSelector** and **useDispatch** hooks
+- Keep **state structure** simple and flat
+- **Avoid over-engineering** - only use Redux for truly global state
+
+## Component Reusability Guidelines
+
+### Component Design Principles
+- **Single Responsibility**: Each component has one clear purpose
+- **Composition**: Build complex components from simple ones
+- **Props Interface**: Define clear, typed prop interfaces
+- **Default Props**: Provide sensible defaults
+- **Flexible Styling**: Accept className and style props
+- **Separate Files**: Create new component files instead of inline components
+- **Import Components**: Always import reusable components from separate files
+- **Avoid Over-engineering**: Keep complexity at a decent level, don't over-engineer
+
+### Reusable Component Patterns
+```typescript
+// Example reusable component structure
+interface ChartCardProps {
+  title: string;
+  data: ChartData[];
+  period: 'monthly' | 'quarterly' | 'yearly';
+  className?: string;
+  onPeriodChange?: (period: string) => void;
+}
+
+const ChartCard = ({
+  title,
+  data,
+  period,
+  className = '',
+  onPeriodChange
+}: ChartCardProps) => {
+  // Component implementation
+};
+```
+
+### Component Organization
+```typescript
+// ✅ DO: Create separate files for components
+// src/components/ChartCard/ChartCard.tsx
+export const ChartCard = ({ ... }: ChartCardProps) => { ... };
+
+// ✅ DO: Import components from separate files
+import { ChartCard } from '@/components/ChartCard/ChartCard';
+
+// ❌ DON'T: Define components inline in the same file
+const InlineComponent = () => { ... }; // Avoid this pattern
+```
+
+## Testing Standards
+
+### Testing Strategy
+- **Unit tests** for all utility functions
+- **Component tests** for reusable components
+- **Integration tests** for page flows
+- **E2E tests** for critical user journeys
+
+### Testing Best Practices
+- Use **React Testing Library** for component tests
+- Implement **Jest** for unit testing
+- Use **MSW** for API mocking
+- Test **user interactions** not implementation details
+- Maintain **high test coverage** for critical paths
+
+## Code Quality Standards
+
+### File Organization
+- Group **related components** in folders
+- Use **index files** for clean imports
+- Separate **business logic** from UI components
+- Organize **types** in dedicated files
+- Keep **utility functions** in lib directory
+
+### Naming Conventions
+- **PascalCase** for components and interfaces
+- **camelCase** for functions and variables
+- **kebab-case** for file names
+- **UPPER_CASE** for constants
+- **Descriptive names** that explain purpose
+
+### Error Handling
+- Implement **proper error boundaries**
+- Use **try-catch** for async operations
+- Provide **user-friendly error messages**
+- Log **errors** for debugging
+- Handle **edge cases** gracefully
+
+### Git Commit Standards
+- **Use conventional commit format**:
+  - `feat:` for new features
+  - `fix:` for bug fixes
+  - `style:` for styling changes
+  - `refactor:` for code refactoring
+  - `docs:` for documentation
+  - `test:` for adding tests
+- **Write descriptive commit messages** that explain the change
+- **Group related changes** in single commits
+- **Keep commits atomic** - one logical change per commit
+- **Use present tense** in commit messages
+
+## Mobile-First Development
+
+### Responsive Design Principles
+- **Mobile-first approach** - Design for mobile first, then enhance for larger screens
+- **Progressive enhancement** - Start with core functionality, add features for larger screens
+- **Touch-friendly interfaces** - Ensure all interactive elements are touch-accessible
+- **Viewport optimization** - Use proper viewport meta tags and responsive units
+
+### Responsive Breakpoints
+```css
+/* Mobile-first breakpoints */
+/* Base styles for mobile (320px+) */
+.mobile-component { /* Mobile styles */ }
+
+/* Tablet (768px+) */
+@media (min-width: 768px) {
+  .tablet-component { /* Tablet styles */ }
+}
+
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+  .desktop-component { /* Desktop styles */ }
+}
+
+/* Large screens (1280px+) */
+@media (min-width: 1280px) {
+  .large-component { /* Large screen styles */ }
+}
+```
+
+### Mobile-First Component Patterns
+```tsx
+// Mobile-first component structure
+const ResponsiveComponent = () => {
+  return (
+    <div className="
+      w-full px-4 py-2           /* Mobile base */
+      md:px-6 md:py-4           /* Tablet */
+      lg:px-8 lg:py-6           /* Desktop */
+      xl:px-12 xl:py-8          /* Large screens */
+    ">
+      {/* Component content */}
+    </div>
+  );
+};
+```
+
+### Touch-Friendly Design
+- **Minimum touch targets** of 44px × 44px
+- **Adequate spacing** between interactive elements
+- **Gesture support** for mobile interactions
+- **Swipe-friendly** navigation patterns
+- **Thumb-friendly** button placement
+
+### Mobile Performance
+- **Optimize images** for mobile bandwidth
+- **Minimize JavaScript** bundle size
+- **Use lazy loading** for non-critical content
+- **Implement touch feedback** for better UX
+- **Test on real devices** not just emulators
+
+## Performance Optimization
+
+### React Performance
+- Use **React.memo** for expensive components
+- Implement **useCallback** for function props
+- Use **useMemo** for expensive calculations
+- Optimize **re-renders** with proper dependencies
+- Implement **lazy loading** for large components
+
+### Bundle Optimization
+- **Code splitting** with dynamic imports
+- **Tree shaking** for unused code removal
+- **Image optimization** with Next.js Image component
+- **Minimize bundle size** with proper imports
+- **Preload critical resources**
+
+### Data Visualization Performance
+- **Virtualize large datasets** for charts
+- **Debounce chart updates** during rapid changes
+- **Optimize chart rendering** with proper memoization
+- **Lazy load chart components** when needed
+alwaysApply: true
+---

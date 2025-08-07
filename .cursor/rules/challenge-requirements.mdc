@@ -1,0 +1,82 @@
+# Kudwa Challenge Requirements
+
+## Project Overview
+Create a simplified sidebar-based frontend dashboard and reporting interface using sample data provided by Kudwa.
+
+## Core Requirements
+
+### 📁 Data Sources
+- **Main Dashboard Data**: [Main Dashboard/monthly.json](mdc:Main Dashboard/monthly.json), [Main Dashboard/quarterly.json](mdc:Main Dashboard/quarterly.json), [Main Dashboard/yearly.json](mdc:Main Dashboard/yearly.json)
+- **Report Data**: [Report/report.json](mdc:Report/report.json)
+
+### 🔖 Sidebar Navigation
+- **Clear differentiation** between two primary sections
+- **Seamless navigation** between pages
+- **Two main sections**:
+  1. **Main Dashboard Page**
+  2. **Report Page**
+
+### 📊 Main Dashboard Page Requirements
+- **Visually appealing** and user-friendly interface
+- **Load and display** data from monthly.json, quarterly.json, and yearly.json
+- **UI controls** for switching between monthly, quarterly, and yearly views
+- **Effective data visualization** using charts, graphs, or intuitive formats
+- **Clear and intuitive** user experience
+
+### 📝 Report Page Requirements
+- **Display data** from report.json
+- **Dynamic, expandable, and interactive** report interface
+- **Expand and collapse** fields and subfields for detailed insights
+- **Toggle controls** between monthly, quarterly, and yearly views
+- **Professional presentation** of report information
+- **User-friendly** report viewing experience
+
+## Technical Requirements
+
+### Frontend Only
+- **No backend required** - use only provided JSON files
+- **Static data loading** from local JSON files
+- **Client-side** data processing and visualization
+
+### Data Structure Understanding
+Based on the JSON files, the application should handle:
+- **Financial metrics** (cashAtBank, revenue, expenses)
+- **Time-series data** with date arrays
+- **Multiple chart types** (line, bar, area charts)
+- **Period-based filtering** (monthly/quarterly/yearly)
+
+### UI/UX Standards
+- **Professional appearance** suitable for a job application
+- **Responsive design** for different screen sizes
+- **Modern interface** with clean, intuitive navigation
+- **Smooth transitions** between data views
+- **Accessible design** following web standards
+
+### 🎨 Kudwa Branding & Design
+- **Color Palette** (Challenge Requirements):
+  - `#B09280` (Primary Brown)
+  - `#EAE62F` (Accent Yellow)
+  - `#698AC5` (Secondary Blue)
+  - `#262626` (Dark Gray)
+  - `#FBFAFA` (Light Background)
+- **Professional financial dashboard aesthetic**
+- **Clean, modern design** reflecting Kudwa's brand
+- **User-friendly, visually appealing, and intuitive** design
+- **Focus on data visualization** and financial insights
+- **Smooth animations and transitions** for enhanced UX
+- **Scroll-triggered animations** for dashboard elements
+- **Professional micro-interactions** and hover effects
+
+## Success Criteria
+- ✅ Sidebar navigation implemented
+- ✅ Dashboard page with period switching
+- ✅ Report page with expandable/collapsible fields
+- ✅ Data visualization with charts
+- ✅ Responsive and professional UI
+- ✅ Clean, maintainable code structure
+- ✅ Kudwa branding colors implemented
+- ✅ Redux Toolkit for state management
+- ✅ Deployed application (Netlify, Vercel, GitHub Pages)
+- ✅ GitHub repository with clear commits
+alwaysApply: true
+---

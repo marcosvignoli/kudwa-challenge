@@ -1,0 +1,99 @@
+# Testing Standards
+
+## Testing Strategy
+
+### Unit Tests
+```typescript
+// Test utility functions
+describe('dataUtils', () => {
+  test('should format currency correctly', () => {
+    expect(formatCurrency(1234.56)).toBe('$1,234.56');
+  });
+});
+```
+
+### Component Tests
+```typescript
+// Test React components
+import { render, screen, fireEvent } from '@testing-library/react';
+
+describe('ChartCard', () => {
+  test('should render chart with correct data', () => {
+    const mockData = [{ name: 'Revenue', values: [100, 200, 300] }];
+    render(<ChartCard title="Revenue" data={mockData} />);
+    
+    expect(screen.getByText('Revenue')).toBeInTheDocument();
+  });
+});
+```
+
+### Integration Tests
+```typescript
+// Test page flows
+describe('Dashboard Page', () => {
+  test('should switch between periods', async () => {
+    render(<Dashboard />);
+    
+    const quarterlyButton = screen.getByText('Quarterly');
+    fireEvent.click(quarterlyButton);
+    
+    expect(screen.getByText('Quarterly Data')).toBeInTheDocument();
+  });
+});
+```
+
+## Testing Best Practices
+
+### Test Structure
+```typescript
+// Arrange, Act, Assert pattern
+describe('ComponentName', () => {
+  // Arrange
+  const mockProps = { title: 'Test', data: [] };
+  
+  // Act
+  test('should render correctly', () => {
+    render(<Component {...mockProps} />);
+    
+    // Assert
+    expect(screen.getByText('Test')).toBeInTheDocument();
+  });
+});
+```
+
+### Mocking
+```typescript
+// Mock external dependencies
+jest.mock('recharts', () => ({
+  LineChart: ({ children }: any) => <div data-testid="line-chart">{children}</div>,
+  Line: ({ dataKey }: any) => <div data-testid={`line-${dataKey}`} />
+}));
+```
+
+### Async Testing
+```typescript
+// Test async operations
+test('should load data on mount', async () => {
+  render(<Dashboard />);
+  
+  await waitFor(() => {
+    expect(screen.getByText('Loading...')).not.toBeInTheDocument();
+  });
+  
+  expect(screen.getByText('Revenue')).toBeInTheDocument();
+});
+```
+
+## Test Coverage Requirements
+- **Utility functions**: 100% coverage
+- **Component logic**: 90% coverage
+- **User interactions**: 80% coverage
+- **Error handling**: 100% coverage
+
+## Testing Tools
+- **Jest**: Unit testing framework
+- **React Testing Library**: Component testing
+- **MSW**: API mocking
+- **@testing-library/jest-dom**: Custom matchers
+globs: *.test.ts,*.test.tsx,*.spec.ts,*.spec.tsx
+---

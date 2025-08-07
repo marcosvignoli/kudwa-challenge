@@ -1,0 +1,144 @@
+# Data Structure & Handling
+
+## JSON Data Files Structure
+
+### Main Dashboard Data
+Located in `Main Dashboard/` folder:
+- `monthly.json` - Monthly financial data
+- `quarterly.json` - Quarterly financial data  
+- `yearly.json` - Yearly financial data
+
+### Report Data
+Located in `Report/` folder:
+- `report.json` - Detailed report data (2MB file)
+
+## Data Structure Interface
+
+```typescript
+interface MainDashboardData {
+  mainDashboard: {
+    period: 'monthly' | 'quarterly' | 'yearly';
+    startDate: string;
+    endDate: string;
+    metricDate: string;
+    dateArray: string[];
+    charts: {
+      [key: string]: ChartData[];
+    };
+  };
+}
+
+interface ChartData {
+  chartType: 'line' | 'bar' | 'area';
+  name: string;
+  values: number[];
+}
+
+interface FinancialMetrics {
+  cashAtBank: ChartData[];
+  revenue: ChartData[];
+  expenses: ChartData[];
+  profit: ChartData[];
+  // Additional metrics as per JSON structure
+}
+```
+
+## Data Loading Strategy
+
+### Static Data Loading
+```typescript
+// Load data from local JSON files
+const loadDashboardData = async (period: string) => {
+  const data = await import(`../../Main Dashboard/${period}.json`);
+  return data.default;
+};
+
+// Load report data
+const loadReportData = async () => {
+  const data = await import(`../../Report/report.json`);
+  return data.default;
+};
+```
+
+### Data Processing Utilities
+```typescript
+// Format currency values
+const formatCurrency = (value: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(value);
+};
+
+// Process chart data for Recharts
+const processChartData = (chartData: ChartData[], dateArray: string[]) => {
+  return chartData.map(series => ({
+    ...series,
+    data: dateArray.map((date, index) => ({
+      date,
+      value: series.values[index]
+    }))
+  }));
+};
+```
+
+## Data Organization
+
+### File Structure
+```
+kudwa-challenge/
+├── Main Dashboard/
+│   ├── monthly.json
+│   ├── quarterly.json
+│   └── yearly.json
+├── Report/
+│   └── report.json
+├── src/
+│   ├── lib/
+│   │   └── data.ts          # Data loading utilities
+│   └── types/
+│       └── data.ts          # TypeScript interfaces
+```
+
+### Data Access Patterns
+```typescript
+// Dashboard data access
+const dashboardData = await loadDashboardData('monthly');
+const { charts, dateArray, period } = dashboardData.mainDashboard;
+
+// Chart data access
+const cashFlowData = charts.cashAtBank;
+const revenueData = charts.revenue;
+const expenseData = charts.expenses;
+```
+
+## Error Handling
+
+### Data Loading Errors
+```typescript
+const loadDataSafely = async (period: string) => {
+  try {
+    const data = await loadDashboardData(period);
+    return { success: true, data };
+  } catch (error) {
+    console.error(`Failed to load ${period} data:`, error);
+    return { success: false, error: 'Failed to load data' };
+  }
+};
+```
+
+### Data Validation
+```typescript
+const validateChartData = (data: any): boolean => {
+  return data && 
+         data.mainDashboard && 
+         data.mainDashboard.charts && 
+         Array.isArray(data.mainDashboard.dateArray);
+};
+```
+description:
+globs:
+alwaysApply: false
+---

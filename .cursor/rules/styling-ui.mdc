@@ -1,0 +1,180 @@
+# Styling & UI Guidelines
+
+## Tailwind CSS Best Practices
+
+### Color Palette
+```css
+/* Kudwa Brand Colors - Challenge Requirements */
+--kudwa-brown: #B09280;      /* Primary brown */
+--kudwa-yellow: #EAE62F;     /* Accent yellow */
+--kudwa-blue: #698AC5;       /* Secondary blue */
+--kudwa-dark: #262626;       /* Dark gray */
+--kudwa-light: #FBFAFA;      /* Light background */
+```
+
+### Component Styling Patterns
+```tsx
+// Consistent card styling
+const cardClasses = "bg-white rounded-lg shadow-sm border border-gray-200 p-6";
+
+// Button variants
+const buttonVariants = {
+  primary: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md",
+  secondary: "bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md",
+  outline: "border border-blue-600 text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-md"
+};
+```
+
+## Responsive Design
+```tsx
+// Mobile-first approach
+const responsiveClasses = {
+  container: "w-full px-4 sm:px-6 lg:px-8",
+  grid: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4",
+  sidebar: "w-64 hidden md:block lg:w-80"
+};
+```
+
+## Chart Styling
+```tsx
+// Kudwa brand chart colors - Challenge Requirements
+const chartColors = [
+  '#B09280', // Primary Brown
+  '#EAE62F', // Accent Yellow
+  '#698AC5', // Secondary Blue
+  '#262626', // Dark Gray
+  '#FBFAFA'  // Light Background
+];
+```
+
+## Accessibility
+```tsx
+// ARIA labels and keyboard navigation
+<button 
+  aria-label="Switch to monthly view"
+  className="focus:outline-none focus:ring-2 focus:ring-blue-500"
+>
+  Monthly
+</button>
+```
+
+## Animation & Transitions
+
+### Framer Motion Implementation
+```tsx
+import { motion } from 'framer-motion';
+
+// Fade in animation
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.6, ease: "easeOut" }
+};
+
+// Stagger children animation
+const staggerContainer = {
+  animate: {
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+// Hover animations
+const hoverScale = {
+  whileHover: { scale: 1.02 },
+  whileTap: { scale: 0.98 }
+};
+```
+
+### Scroll-Triggered Animations
+```tsx
+// Scroll animations for dashboard cards
+const scrollReveal = {
+  initial: { opacity: 0, y: 50 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-100px" },
+  transition: { duration: 0.8, ease: "easeOut" }
+};
+
+// Chart entrance animations
+const chartAnimation = {
+  initial: { opacity: 0, scale: 0.8 },
+  animate: { opacity: 1, scale: 1 },
+  transition: { duration: 0.5, delay: 0.2 }
+};
+```
+
+### Kudwa-Style Animations
+```tsx
+// Smooth page transitions
+const pageTransition = {
+  initial: { opacity: 0, x: -20 },
+  animate: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: 20 },
+  transition: { duration: 0.3 }
+};
+
+// Sidebar navigation animations
+const sidebarAnimation = {
+  initial: { x: -100, opacity: 0 },
+  animate: { x: 0, opacity: 1 },
+  transition: { duration: 0.4, ease: "easeOut" }
+};
+
+// Button hover effects
+const buttonHover = {
+  whileHover: { 
+    scale: 1.05,
+    boxShadow: "0 10px 25px rgba(139, 115, 85, 0.2)"
+  },
+  whileTap: { scale: 0.95 }
+};
+```
+
+### Chart Animations
+```tsx
+// Animated chart data
+const chartDataAnimation = {
+  initial: { pathLength: 0 },
+  animate: { pathLength: 1 },
+  transition: { duration: 1.5, ease: "easeInOut" }
+};
+
+// Bar chart animations
+const barAnimation = {
+  initial: { height: 0 },
+  animate: { height: "100%" },
+  transition: { duration: 0.8, ease: "easeOut" }
+};
+```
+
+### Loading States
+```tsx
+// Skeleton loading animation
+const skeletonAnimation = {
+  animate: {
+    background: [
+      "linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)",
+      "linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%)"
+    ]
+  },
+  transition: { duration: 1.5, repeat: Infinity }
+};
+```
+
+## Light Mode Design (Kudwa's Actual Style)
+```tsx
+// Light mode as default - matching Kudwa's website
+const kudwaClasses = {
+  background: "bg-white",
+  text: "text-black",
+  border: "border-gray-200",
+  card: "bg-gray-50 border-gray-200",
+  sidebar: "bg-white border-gray-200",
+  accent: "text-orange-500",
+  primary: "text-brown-600"
+};
+```
+globs: *.tsx,*.css
+---

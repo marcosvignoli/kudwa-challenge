@@ -1,0 +1,159 @@
+# Data Visualization Guidelines
+
+## Recharts Implementation
+
+### Chart Component Structure
+```typescript
+interface ChartProps {
+  data: ChartData[];
+  title: string;
+  period: 'monthly' | 'quarterly' | 'yearly';
+  className?: string;
+}
+
+const FinancialChart = ({ data, title, period, className }: ChartProps) => {
+  return (
+    <div className={`chart-container ${className}`}>
+      <h3 className="chart-title">{title}</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="date" />
+          <YAxis />
+          <Tooltip formatter={(value) => formatCurrency(value)} />
+          <Legend />
+          <Line type="monotone" dataKey="value" stroke="#2563eb" />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+```
+
+### Financial Data Visualization
+
+#### Line Charts
+- **Cash Flow Trends**: Show cash at bank over time
+- **Revenue Growth**: Display revenue trends
+- **Expense Tracking**: Visualize expense patterns
+
+#### Bar Charts
+- **Period Comparisons**: Monthly vs Quarterly vs Yearly
+- **Category Breakdown**: Revenue sources, expense categories
+- **Performance Metrics**: Key financial ratios
+
+#### Area Charts
+- **Cumulative Data**: Total assets, cumulative revenue
+- **Stacked Metrics**: Multiple data series in one view
+
+### Chart Styling Standards
+```typescript
+// Consistent color scheme for financial data
+const financialColors = {
+  positive: '#10b981',    // Green for positive metrics
+  negative: '#ef4444',    // Red for negative metrics
+  neutral: '#64748b',     // Gray for neutral data
+  primary: '#2563eb',     // Blue for primary metrics
+  secondary: '#8b5cf6'    // Purple for secondary metrics
+};
+
+// Chart configuration
+const chartConfig = {
+  height: 300,
+  margin: { top: 20, right: 30, left: 20, bottom: 5 },
+  gridStroke: '#e2e8f0',
+  tooltipStyle: {
+    backgroundColor: 'white',
+    border: '1px solid #e2e8f0',
+    borderRadius: '8px'
+  }
+};
+```
+
+### Responsive Chart Design
+```typescript
+// Mobile-first chart sizing
+const responsiveChartHeight = {
+  mobile: 200,
+  tablet: 250,
+  desktop: 300,
+  large: 400
+};
+
+// Responsive container
+<ResponsiveContainer width="100%" height={getChartHeight()}>
+  {/* Chart content */}
+</ResponsiveContainer>
+```
+
+### Data Formatting
+```typescript
+// Currency formatting for financial data
+const formatCurrency = (value: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(value);
+};
+
+// Percentage formatting
+const formatPercentage = (value: number): string => {
+  return `${value.toFixed(1)}%`;
+};
+
+// Date formatting for chart labels
+const formatDate = (date: string, period: string): string => {
+  const dateObj = new Date(date);
+  switch (period) {
+    case 'monthly':
+      return dateObj.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    case 'quarterly':
+      return `Q${Math.ceil((dateObj.getMonth() + 1) / 3)} ${dateObj.getFullYear()}`;
+    case 'yearly':
+      return dateObj.getFullYear().toString();
+    default:
+      return date;
+  }
+};
+```
+
+### Performance Optimization
+```typescript
+// Memoize chart components for better performance
+const MemoizedChart = React.memo(FinancialChart);
+
+// Debounce chart updates
+const debouncedChartUpdate = useCallback(
+  debounce((newData) => {
+    setChartData(newData);
+  }, 300),
+  []
+);
+
+// Lazy load chart components
+const LazyChart = lazy(() => import('./FinancialChart'));
+```
+
+### Accessibility Features
+```typescript
+// ARIA labels for charts
+<LineChart 
+  data={data}
+  aria-label={`${title} chart showing ${period} data`}
+>
+  {/* Chart content */}
+</LineChart>
+
+// Keyboard navigation support
+const handleKeyDown = (event: KeyboardEvent) => {
+  if (event.key === 'Enter' || event.key === ' ') {
+    // Handle chart interaction
+  }
+};
+```
+description:
+globs:
+alwaysApply: false
+---

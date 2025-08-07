@@ -1,0 +1,63 @@
+# TypeScript Configuration & Best Practices
+
+## Type Definitions
+
+### Data Interfaces
+```typescript
+// Financial data structure
+interface FinancialData {
+  period: 'monthly' | 'quarterly' | 'yearly';
+  startDate: string;
+  endDate: string;
+  metricDate: string;
+  dateArray: string[];
+  charts: {
+    [key: string]: ChartData[];
+  };
+}
+
+interface ChartData {
+  chartType: 'line' | 'bar' | 'area';
+  name: string;
+  values: number[];
+}
+```
+
+### Component Props
+```typescript
+// Always define prop interfaces
+interface ComponentProps {
+  title: string;
+  data: ChartData[];
+  className?: string;
+  onAction?: (value: string) => void;
+}
+```
+
+## Type Safety Rules
+- **Strict mode enabled** in tsconfig.json
+- **No implicit any** - always define types
+- **Union types** for prop variants
+- **Generic types** for reusable components
+- **Utility types** for partial/optional props
+
+## Type Guards
+```typescript
+// Use type guards for runtime type checking
+function isChartData(obj: any): obj is ChartData {
+  return obj && typeof obj.chartType === 'string' && Array.isArray(obj.values);
+}
+```
+
+## Error Handling Types
+```typescript
+// Define error types
+type ApiError = {
+  message: string;
+  code: number;
+};
+
+type LoadingState = 'idle' | 'loading' | 'success' | 'error';
+```
+globs: *.ts,*.tsx
+---
