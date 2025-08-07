@@ -1,77 +1,58 @@
 # Styling & UI Guidelines
 
-## Tailwind CSS Best Practices
+## Current Design Identity & Patterns
 
-### Color Palette
+### Kudwa Brand Colors (Current Implementation)
 ```css
-/* Kudwa Brand Colors - Challenge Requirements */
---kudwa-brown: #B09280;      /* Primary brown */
---kudwa-yellow: #EAE62F;     /* Accent yellow */
---kudwa-blue: #698AC5;       /* Secondary blue */
---kudwa-dark: #262626;       /* Dark gray */
---kudwa-light: #FBFAFA;      /* Light background */
+/* Kudwa Brand Colors - Successfully Implemented */
+--kudwa-brown: #B09280;      /* Primary brown - used for active states */
+--kudwa-yellow: #EAE62F;     /* Accent yellow - used for highlights */
+--kudwa-blue: #698AC5;       /* Secondary blue - used for primary actions */
+--kudwa-dark: #262626;       /* Dark gray - used for text */
+--kudwa-light: #FBFAFA;      /* Light background - main app background */
+--kudwa-muted: #6B7280;      /* Muted text - used for secondary text */
 ```
 
-### Component Styling Patterns
+### Current Chart Styling Patterns
 ```tsx
-// Consistent card styling
-const cardClasses = "bg-white rounded-lg shadow-sm border border-gray-200 p-6";
+// LineChart - Current Working Implementation
+const lineChartClasses = "flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-100";
 
-// Button variants
-const buttonVariants = {
-  primary: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md",
-  secondary: "bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md",
-  outline: "border border-blue-600 text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-md"
+// DonutChart - Current Working Implementation  
+const donutChartClasses = "flex items-center justify-center bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg border border-yellow-100";
+
+// Chart Container Pattern
+const chartContainer = {
+  wrapper: "flex items-center justify-center",
+  gradient: "bg-gradient-to-br",
+  border: "rounded-lg border",
+  height: "h-[300px]"
 };
 ```
 
-## Responsive Design
+### Current Animation Patterns (Working Well)
 ```tsx
-// Mobile-first approach
-const responsiveClasses = {
-  container: "w-full px-4 sm:px-6 lg:px-8",
-  grid: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4",
-  sidebar: "w-64 hidden md:block lg:w-80"
-};
-```
-
-## Chart Styling
-```tsx
-// Kudwa brand chart colors - Challenge Requirements
-const chartColors = [
-  '#B09280', // Primary Brown
-  '#EAE62F', // Accent Yellow
-  '#698AC5', // Secondary Blue
-  '#262626', // Dark Gray
-  '#FBFAFA'  // Light Background
-];
-```
-
-## Accessibility
-```tsx
-// ARIA labels and keyboard navigation
-<button 
-  aria-label="Switch to monthly view"
-  className="focus:outline-none focus:ring-2 focus:ring-blue-500"
->
-  Monthly
-</button>
-```
-
-## Animation & Transitions
-
-### Framer Motion Implementation
-```tsx
-import { motion } from 'framer-motion';
-
-// Fade in animation
-const fadeInUp = {
+// Page Entrance Animation
+const pageAnimation = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6, ease: "easeOut" }
+  transition: { duration: 0.6 }
 };
 
-// Stagger children animation
+// Component Entrance Animation
+const componentAnimation = {
+  initial: { opacity: 0, scale: 0.95 },
+  animate: { opacity: 1, scale: 1 },
+  transition: { duration: 0.5 }
+};
+
+// Button Hover Animation
+const buttonHover = {
+  whileHover: { scale: 1.05 },
+  whileTap: { scale: 0.95 }
+};
+
+// Stagger Children Animation
 const staggerContainer = {
   animate: {
     transition: {
@@ -79,102 +60,240 @@ const staggerContainer = {
     }
   }
 };
+```
 
-// Hover animations
-const hoverScale = {
-  whileHover: { scale: 1.02 },
-  whileTap: { scale: 0.98 }
+### Current Layout Patterns
+```tsx
+// Main Layout Structure
+const layoutPattern = {
+  container: "flex h-screen bg-[#FBFAFA]",
+  sidebar: "w-64 bg-white border-r border-gray-200 p-6",
+  mainContent: "flex-1 overflow-auto",
+  contentPadding: "p-6"
+};
+
+// Mobile Navigation Pattern
+const mobileNavPattern = {
+  hamburger: "fixed top-4 left-4 z-50 p-2 rounded-lg bg-white shadow-md border border-gray-200",
+  overlay: "fixed inset-0 bg-black bg-opacity-50 z-40",
+  menu: "fixed left-0 top-0 h-full w-80 bg-white shadow-xl z-50"
 };
 ```
 
-### Scroll-Triggered Animations
+### Current Card & Component Styling
 ```tsx
-// Scroll animations for dashboard cards
-const scrollReveal = {
-  initial: { opacity: 0, y: 50 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "-100px" },
-  transition: { duration: 0.8, ease: "easeOut" }
+// Card Pattern (Working Well)
+const cardClasses = "bg-white rounded-lg shadow-sm border border-gray-200 p-6";
+
+// Button Variants (Current Implementation)
+const buttonVariants = {
+  primary: "bg-[#B09280] hover:bg-[#9A7F6E] text-white px-4 py-2 rounded-md transition-all duration-200 font-medium",
+  secondary: "bg-white hover:bg-gray-50 text-[#262626] border border-gray-200 px-4 py-2 rounded-md transition-all duration-200 font-medium",
+  active: "bg-[#B09280] text-white"
 };
 
-// Chart entrance animations
-const chartAnimation = {
-  initial: { opacity: 0, scale: 0.8 },
-  animate: { opacity: 1, scale: 1 },
-  transition: { duration: 0.5, delay: 0.2 }
+// Text Color Classes
+const textClasses = {
+  primary: "text-[#B09280]",
+  secondary: "text-[#698AC5]", 
+  accent: "text-[#EAE62F]",
+  dark: "text-[#262626]",
+  muted: "text-[#6B7280]"
 };
 ```
 
-### Kudwa-Style Animations
+### Current Responsive Design Patterns
 ```tsx
-// Smooth page transitions
+// Grid Layouts (Current Working Implementation)
+const gridPatterns = {
+  kpiCards: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6",
+  charts: "grid grid-cols-1 lg:grid-cols-2 gap-8",
+  responsive: "flex flex-col sm:flex-row sm:items-center sm:justify-between"
+};
+
+// Mobile-First Spacing
+const spacingPatterns = {
+  container: "space-y-8",
+  section: "space-y-6", 
+  cards: "gap-6",
+  charts: "gap-8"
+};
+```
+
+## Chart Implementation Standards
+
+### Recharts Integration Pattern
+```tsx
+// LineChart Implementation (Current Working)
+const lineChartImplementation = {
+  container: "ResponsiveContainer width='100%' height={height - 100}",
+  chart: "RechartsLineChart data={processedData}",
+  styling: {
+    grid: "strokeDasharray='3 3' stroke='#E5E7EB'",
+    axis: "stroke='#6B7280' fontSize={12} tickLine={false} axisLine={false}",
+    tooltip: "backgroundColor='white' border='1px solid #E5E7EB' borderRadius='8px'"
+  }
+};
+
+// DonutChart Implementation (Current Working)
+const donutChartImplementation = {
+  container: "ResponsiveContainer width='100%' height={height - 100}",
+  chart: "PieChart with Pie component",
+  styling: {
+    innerRadius: 60,
+    outerRadius: 80,
+    paddingAngle: 2
+  }
+};
+```
+
+### Chart Color Palette (Current Implementation)
+```tsx
+// Kudwa Brand Chart Colors
+const chartColors = [
+  "#B09280", // Primary Brown
+  "#698AC5", // Secondary Blue  
+  "#EAE62F", // Accent Yellow
+  "#262626", // Dark Gray
+  "#6B7280", // Muted Gray
+  "#F59E0B", // Orange
+  "#10B981", // Green
+  "#EF4444"  // Red
+];
+```
+
+## Animation & Transition Standards
+
+### Framer Motion Patterns (Current Working)
+```tsx
+// Page Transitions
 const pageTransition = {
-  initial: { opacity: 0, x: -20 },
-  animate: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: 20 },
-  transition: { duration: 0.3 }
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.6 }
 };
 
-// Sidebar navigation animations
-const sidebarAnimation = {
-  initial: { x: -100, opacity: 0 },
-  animate: { x: 0, opacity: 1 },
-  transition: { duration: 0.4, ease: "easeOut" }
+// Component Animations
+const componentAnimation = {
+  initial: { opacity: 0, scale: 0.95 },
+  animate: { opacity: 1, scale: 1 },
+  transition: { duration: 0.5 }
 };
 
-// Button hover effects
-const buttonHover = {
-  whileHover: { 
-    scale: 1.05,
-    boxShadow: "0 10px 25px rgba(139, 115, 85, 0.2)"
-  },
-  whileTap: { scale: 0.95 }
-};
-```
-
-### Chart Animations
-```tsx
-// Animated chart data
-const chartDataAnimation = {
-  initial: { pathLength: 0 },
-  animate: { pathLength: 1 },
-  transition: { duration: 1.5, ease: "easeInOut" }
-};
-
-// Bar chart animations
-const barAnimation = {
-  initial: { height: 0 },
-  animate: { height: "100%" },
-  transition: { duration: 0.8, ease: "easeOut" }
-};
-```
-
-### Loading States
-```tsx
-// Skeleton loading animation
-const skeletonAnimation = {
+// Stagger Animations
+const staggerAnimation = {
   animate: {
-    background: [
-      "linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)",
-      "linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%)"
-    ]
-  },
-  transition: { duration: 1.5, repeat: Infinity }
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+// Mobile Menu Animation
+const mobileMenuAnimation = {
+  initial: { x: -300, opacity: 0 },
+  animate: { x: 0, opacity: 1 },
+  exit: { x: -300, opacity: 0 },
+  transition: { duration: 0.3, ease: "easeOut" }
 };
 ```
 
-## Light Mode Design (Kudwa's Actual Style)
+## Mobile-First Design Standards
+
+### Current Mobile Implementation
 ```tsx
-// Light mode as default - matching Kudwa's website
-const kudwaClasses = {
-  background: "bg-white",
-  text: "text-black",
-  border: "border-gray-200",
-  card: "bg-gray-50 border-gray-200",
-  sidebar: "bg-white border-gray-200",
-  accent: "text-orange-500",
-  primary: "text-brown-600"
+// Mobile Navigation Pattern (Working Well)
+const mobileNav = {
+  hamburger: "md:hidden fixed top-4 left-4 z-50",
+  backdrop: "fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden",
+  menu: "fixed left-0 top-0 h-full w-80 bg-white shadow-xl z-50 md:hidden"
+};
+
+// Responsive Layout Pattern
+const responsiveLayout = {
+  main: "flex-1 overflow-auto w-full md:w-auto",
+  content: "p-4 md:p-6 pt-16 md:pt-6"
 };
 ```
+
+## Design Consistency Rules
+
+### DO's (Current Working Patterns)
+- ✅ Use gradient backgrounds for chart containers
+- ✅ Apply Kudwa brand colors consistently
+- ✅ Use Framer Motion for smooth animations
+- ✅ Implement mobile-first responsive design
+- ✅ Use consistent spacing patterns
+- ✅ Apply shadow and border styling consistently
+
+### DON'Ts (Avoid Breaking Current Design)
+- ❌ Don't change gradient backgrounds on chart containers
+- ❌ Don't modify the current color palette
+- ❌ Don't remove Framer Motion animations
+- ❌ Don't break mobile navigation patterns
+- ❌ Don't change the current card styling
+- ❌ Don't modify the current button variants
+
+## Component Styling Guidelines
+
+### Chart Components
+```tsx
+// Always use this pattern for new charts
+const chartWrapper = {
+  container: "flex items-center justify-center",
+  gradient: "bg-gradient-to-br from-[color]-50 to-[color]-100", 
+  border: "rounded-lg border border-[color]-100",
+  height: "h-[300px]"
+};
+```
+
+### Button Components
+```tsx
+// Use existing button variants
+const buttonPattern = {
+  primary: "bg-[#B09280] hover:bg-[#9A7F6E] text-white px-4 py-2 rounded-md transition-all duration-200 font-medium",
+  secondary: "bg-white hover:bg-gray-50 text-[#262626] border border-gray-200 px-4 py-2 rounded-md transition-all duration-200 font-medium"
+};
+```
+
+### Card Components
+```tsx
+// Use consistent card styling
+const cardPattern = "bg-white rounded-lg shadow-sm border border-gray-200 p-6";
+```
+
+## Animation Standards
+
+### Entrance Animations
+```tsx
+// Use these patterns for new components
+const entranceAnimations = {
+  fadeInUp: {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.6 }
+  },
+  fadeInScale: {
+    initial: { opacity: 0, scale: 0.95 },
+    animate: { opacity: 1, scale: 1 },
+    transition: { duration: 0.5 }
+  }
+};
+```
+
+### Interaction Animations
+```tsx
+// Use these for interactive elements
+const interactionAnimations = {
+  hover: { scale: 1.05 },
+  tap: { scale: 0.95 },
+  hoverShadow: { boxShadow: "0 10px 25px rgba(139, 115, 85, 0.2)" }
+};
+```
+
+---
+
+**Current Design Identity Captured:** This document now reflects the actual working implementation with gradient chart containers, Kudwa brand colors, Framer Motion animations, and mobile-first responsive design that's currently functioning well in the application.
 globs: *.tsx,*.css
+alwaysApply: true
 ---

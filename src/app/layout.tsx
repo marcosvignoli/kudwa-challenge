@@ -7,20 +7,19 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Kudwa Dashboard Challenge",
-  description: "A frontend dashboard and reporting interface built with Next.js, TypeScript, and Redux Toolkit.",
+  description:
+    "A frontend dashboard and reporting interface built with Next.js and TypeScript.",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Layout>
-          {children}
-        </Layout>
+        <Layout>{children}</Layout>
       </body>
     </html>
   );

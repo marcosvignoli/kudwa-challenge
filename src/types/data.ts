@@ -1,12 +1,20 @@
 export interface ChartData {
-  chartType: 'line' | 'bar' | 'area';
+  chartType: "line" | "bar" | "area";
   name: string;
   values: number[];
 }
 
+export interface KPIData {
+  name: string;
+  value: number;
+  date?: string;
+  mOm?: number;
+  type?: string;
+}
+
 export interface MainDashboardData {
   mainDashboard: {
-    period: 'monthly' | 'quarterly' | 'yearly';
+    period: "monthly" | "quarterly" | "yearly";
     startDate: string;
     endDate: string;
     metricDate: string;
@@ -14,6 +22,10 @@ export interface MainDashboardData {
     charts: {
       [key: string]: ChartData[];
     };
+  };
+  mainDashboardKPIs: {
+    topKPIs: KPIData[];
+    KPIs: KPIData[];
   };
 }
 
@@ -25,7 +37,7 @@ export interface FinancialMetrics {
   // Additional metrics as per JSON structure
 }
 
-export type PeriodType = 'monthly' | 'quarterly' | 'yearly';
+export type PeriodType = "monthly" | "quarterly" | "yearly";
 
 export interface DashboardState {
   currentPeriod: PeriodType;
@@ -36,5 +48,5 @@ export interface DashboardState {
 
 export interface ReportData {
   // Will be defined based on report.json structure
-  [key: string]: any;
+  [key: string]: unknown;
 }

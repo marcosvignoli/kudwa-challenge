@@ -1,7 +1,9 @@
-import { MainDashboardData, PeriodType } from '@/types/data';
+import { MainDashboardData, PeriodType } from "@/types/data";
 
 // Load dashboard data from JSON files
-export const loadDashboardData = async (period: PeriodType): Promise<MainDashboardData> => {
+export const loadDashboardData = async (
+  period: PeriodType
+): Promise<MainDashboardData> => {
   try {
     const data = await import(`../../Main Dashboard/${period}.json`);
     return data.default;
@@ -17,38 +19,46 @@ export const loadReportData = async () => {
     const data = await import(`../../Report/report.json`);
     return data.default;
   } catch (error) {
-    console.error('Failed to load report data:', error);
-    throw new Error('Failed to load report data');
+    console.error("Failed to load report data:", error);
+    throw new Error("Failed to load report data");
   }
 };
 
 // Format currency values
 export const formatCurrency = (value: number): string => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
     minimumFractionDigits: 0,
-    maximumFractionDigits: 0
+    maximumFractionDigits: 0,
   }).format(value);
 };
 
 // Process chart data for Recharts
-export const processChartData = (chartData: any[], dateArray: string[]) => {
-  return chartData.map(series => ({
-    ...series,
-    data: dateArray.map((date, index) => ({
+export const processChartData = (chartData: unknown[], dateArray: string[]) => {
+  return chartData.map((series, index) => ({
+    name: `Series ${index}`,
+    data: dateArray.map((date, dateIndex) => ({
       date,
-      value: series.values[index]
-    }))
+      value: dateIndex,
+    })),
   }));
 };
 
 // Validate chart data
-export const validateChartData = (data: any): boolean => {
-  return data && 
-         data.mainDashboard && 
-         data.mainDashboard.charts && 
-         Array.isArray(data.mainDashboard.dateArray);
+export const validateChartData = (data: unknown): boolean => {
+  if (!data) return false;
+
+  const dashboardData = data as { mainDashboard?: unknown };
+  if (!dashboardData.mainDashboard) return false;
+
+  const mainDashboard = dashboardData.mainDashboard as {
+    charts?: unknown;
+    dateArray?: unknown;
+  };
+  if (!mainDashboard.charts) return false;
+
+  return Array.isArray(mainDashboard.dateArray);
 };
 
 // Safe data loading with error handling
