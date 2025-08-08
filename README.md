@@ -1,6 +1,5 @@
 # 🏦 Kudwa Financial Dashboard Challenge
 
-<div align="center">
 
 
 ### Live Demo: https://kudwa-challenge.vercel.app/
@@ -8,9 +7,6 @@
 ```
 git clone https://github.com/marcosvignoli/kudwa-challenge
 ```
-</div>
-
-<div align="center">
 
 ### 📱 **Dashboard Preview**
 ![Dashboard Screenshot](https://via.placeholder.com/800x400/1F2937/FFFFFF?text=Dashboard+Screenshot)
@@ -18,7 +14,6 @@ git clone https://github.com/marcosvignoli/kudwa-challenge
 ### 📊 **Report Page Preview**  
 ![Report Screenshot](https://via.placeholder.com/800x400/1F2937/FFFFFF?text=Report+Page+Screenshot)
 
-</div>
 
 ---
 
