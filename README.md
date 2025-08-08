@@ -4,7 +4,7 @@
 
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-green?style=for-the-badge&logo=vercel)](https://kudwa-challenge.vercel.app)
-[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-black?style=for-the-badge&logo=github)](https://github.com/marcosvignoli/kudwa-challenge)
+[GitHub Repository](https://github.com/marcosvignoli/kudwa-challenge)
 
 </div>
 
