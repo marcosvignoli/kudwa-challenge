@@ -20,8 +20,6 @@ git clone https://github.com/marcosvignoli/kudwa-challenge
 
 ---
 
-A modern, responsive financial dashboard and reporting interface built with Next.js, TypeScript, and Tailwind CSS. This project demonstrates advanced frontend development skills, strategic thinking, and modern development practices.
-
 ## 🎯 Project Overview
 
 ### **Development Approach**
