@@ -3,8 +3,8 @@
 <div align="center">
 
 
-Live Demo: (https://kudwa-challenge.vercel.app/)
-Clone Repository: 
+### Live Demo: https://kudwa-challenge.vercel.app/
+### Clone Repository: 
 ```
 git clone https://github.com/marcosvignoli/kudwa-challenge
 ```
