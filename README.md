@@ -3,9 +3,11 @@
 <div align="center">
 
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-green?style=for-the-badge&logo=vercel)](https://kudwa-challenge.vercel.app)
-[GitHub Repository](https://github.com/marcosvignoli/kudwa-challenge)
-
+Live Demo: (https://kudwa-challenge.vercel.app/)
+Clone Repository: 
+```
+git clone https://github.com/marcosvignoli/kudwa-challenge
+```
 </div>
 
 <div align="center">
