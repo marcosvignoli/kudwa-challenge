@@ -1,50 +1,26 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { loadDashboardData } from "@/lib/data";
-import { MainDashboardData } from "@/types/data";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { fetchDashboardData } from "@/lib/slices/dashboardSlice";
+import { clearError } from "@/lib/slices/appSlice";
 import { LineChart, DonutChart } from "@/components/Charts";
 import { MetricCard, ChartContainer } from "@/components/Dashboard";
+import { PeriodSelector } from "@/components/UI/PeriodSelector";
 import { ChartDataProcessor } from "@/lib/utils/chartDataProcessor";
 
-type PeriodType = "monthly" | "quarterly" | "yearly";
-
-const periods = [
-  { id: "monthly", label: "Monthly" },
-  { id: "quarterly", label: "Quarterly" },
-  { id: "yearly", label: "Yearly" },
-];
-
 export default function DashboardPage() {
-  const [currentPeriod, setCurrentPeriod] = useState<PeriodType>("monthly");
-  const [data, setData] = useState<MainDashboardData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+  const { period } = useAppSelector((state) => state.app);
+  const { data, loading, error } = useAppSelector((state) => state.dashboard);
 
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const result = await loadDashboardData(currentPeriod);
-        setData(result);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load data");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadData();
-  }, [currentPeriod]);
-
-  const handlePeriodChange = (period: PeriodType) => {
-    setCurrentPeriod(period);
-  };
+    dispatch(fetchDashboardData(period));
+  }, [dispatch, period]);
 
   const handleClearError = () => {
-    setError(null);
+    dispatch(clearError());
   };
 
   // Extract KPI data from the loaded data
@@ -79,29 +55,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Period Selector */}
-        <div className="flex flex-wrap gap-3 mt-4 sm:mt-0">
-          {periods.map((period, index) => (
-            <motion.button
-              key={period.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3, delay: 0.2 + index * 0.1 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => handlePeriodChange(period.id as PeriodType)}
-              className={`
-                px-4 py-2 rounded-lg font-medium transition-all duration-200
-                ${
-                  currentPeriod === period.id
-                    ? "btn-active shadow-md"
-                    : "btn-secondary"
-                }
-              `}
-            >
-              {period.label}
-            </motion.button>
-          ))}
-        </div>
+        <PeriodSelector className="mt-4 sm:mt-0" />
       </motion.div>
 
       {/* Loading State */}

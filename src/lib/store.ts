@@ -1,0 +1,15 @@
+import { configureStore } from "@reduxjs/toolkit";
+import appReducer from "./slices/appSlice";
+import dashboardReducer from "./slices/dashboardSlice";
+import reportReducer from "./slices/reportSlice";
+
+export const store = configureStore({
+  reducer: {
+    app: appReducer,
+    dashboard: dashboardReducer,
+    report: reportReducer,
+  },
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

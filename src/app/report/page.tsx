@@ -1,55 +1,28 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { loadReportData } from "@/lib/data";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { fetchReportData, toggleSection } from "@/lib/slices/reportSlice";
+import { clearError } from "@/lib/slices/appSlice";
 import { LineChart, DonutChart, ChartWrapper } from "@/components/Charts";
 import { ChartDataProcessor } from "@/lib/utils/chartDataProcessor";
 import { extractFinancialSummary } from "@/lib/utils/reportDataProcessing";
-import { ReportData } from "@/types/data";
-
-type PeriodType = "monthly" | "quarterly" | "yearly";
-
-const periods = [
-  { id: "monthly", label: "Monthly" },
-  { id: "quarterly", label: "Quarterly" },
-  { id: "yearly", label: "Yearly" },
-];
+import { PeriodSelector } from "@/components/UI/PeriodSelector";
 
 export default function ReportPage() {
-  const [currentPeriod, setCurrentPeriod] = useState<PeriodType>("monthly");
-  const [expandedSections, setExpandedSections] = useState<string[]>([]);
-  const [data, setData] = useState<ReportData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+  const { period } = useAppSelector((state) => state.app);
+  const { data, loading, error, expandedSections } = useAppSelector(
+    (state) => state.report
+  );
 
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const result = await loadReportData();
-        setData(result as unknown as ReportData);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load data");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadData();
-  }, []);
-
-  const handlePeriodChange = (period: PeriodType) => {
-    setCurrentPeriod(period);
-  };
+    dispatch(fetchReportData());
+  }, [dispatch]);
 
   const handleToggleSection = (sectionId: string) => {
-    setExpandedSections((prev) =>
-      prev.includes(sectionId)
-        ? prev.filter((id) => id !== sectionId)
-        : [...prev, sectionId]
-    );
+    dispatch(toggleSection(sectionId));
   };
 
   const formatCurrency = (amount: number) => {
@@ -60,39 +33,39 @@ export default function ReportPage() {
   };
 
   // Extract financial summary data
-  const financialSummary = extractFinancialSummary(data);
+  const financialSummary = extractFinancialSummary(data as any);
 
   // Generate date array for charts
   const dateArray = ChartDataProcessor.generateReportDateArray(
-    data,
-    currentPeriod
+    data as any,
+    period
   );
 
   // Get processed chart data using the standardized processor
   const revenueDonutData = ChartDataProcessor.getReportDonutChartData(
-    data,
+    data as any,
     "Total Revenues",
-    currentPeriod,
+    period,
     8
   );
 
   const expensesDonutData = ChartDataProcessor.getReportDonutChartData(
-    data,
+    data as any,
     "Total Expenses",
-    currentPeriod,
+    period,
     8
   );
 
   const revenueLineData = ChartDataProcessor.getReportLineChartData(
-    data,
+    data as any,
     "Total Revenues",
-    currentPeriod
+    period
   );
 
   const expensesLineData = ChartDataProcessor.getReportLineChartData(
-    data,
+    data as any,
     "Total Expenses",
-    currentPeriod
+    period
   );
 
   return (
@@ -114,35 +87,12 @@ export default function ReportPage() {
             Financial Report
           </h1>
           <p className="text-[#6B7280] text-lg">
-            Comprehensive financial analysis and insights for {currentPeriod}{" "}
-            period
+            Comprehensive financial analysis and insights for {period} period
           </p>
         </div>
 
         {/* Period Selector */}
-        <div className="flex space-x-3 mt-4 sm:mt-0">
-          {periods.map((period, index) => (
-            <motion.button
-              key={period.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3, delay: 0.2 + index * 0.1 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => handlePeriodChange(period.id as PeriodType)}
-              className={`
-                px-4 py-2 rounded-lg font-medium transition-all duration-200
-                ${
-                  currentPeriod === period.id
-                    ? "btn-active shadow-md"
-                    : "btn-secondary"
-                }
-              `}
-            >
-              {period.label}
-            </motion.button>
-          ))}
-        </div>
+        <PeriodSelector className="mt-4 sm:mt-0" />
       </motion.div>
 
       {/* Loading State */}
@@ -174,7 +124,7 @@ export default function ReportPage() {
               <p className="text-red-700 font-medium">{error}</p>
             </div>
             <button
-              onClick={() => setError(null)}
+              onClick={() => dispatch(clearError())}
               className="text-red-500 hover:text-red-700 text-sm underline font-medium"
             >
               Dismiss
