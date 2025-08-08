@@ -9,11 +9,13 @@ git clone https://github.com/marcosvignoli/kudwa-challenge
 ```
 
 ### 📱 **Dashboard Preview**
-<img width="1440" height="900" alt="image" src="https://github.com/user-attachments/assets/b53c8ed9-424b-4560-95c5-9970d5993be2" />
+<img width="1906" height="1079" alt="image" src="https://github.com/user-attachments/assets/2bf32fea-594b-46fe-810a-531c3fb0a570" />
+
 
 
 ### 📊 **Report Page Preview**  
-<img width="1440" height="900" alt="image" src="https://github.com/user-attachments/assets/d1dbd1e8-ac1b-45cb-b30e-c61c1e27e21c" />
+<img width="1906" height="1079" alt="image" src="https://github.com/user-attachments/assets/7e0eb093-e949-48f8-bbcb-ac10999a8325" />
+
 
 
 ---
