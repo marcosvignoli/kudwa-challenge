@@ -2,10 +2,6 @@
 
 <div align="center">
 
-![Kudwa Dashboard](https://img.shields.io/badge/Kudwa-Dashboard%20Challenge-blue?style=for-the-badge&logo=react)
-![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.0-38B2AC?style=for-the-badge&logo=tailwind-css)
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-green?style=for-the-badge&logo=vercel)](https://kudwa-challenge.vercel.app)
 [![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-black?style=for-the-badge&logo=github)](https://github.com/marcosvignoli/kudwa-challenge)
