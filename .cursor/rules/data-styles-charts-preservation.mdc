@@ -1,0 +1,134 @@
+---
+alwaysApply: true
+description: Rules for preserving data handling, styles, and charts functionality while allowing necessary updates
+---
+
+# Data, Styles, and Charts Preservation Rules
+
+## 🚨 **CRITICAL: NO UNILATERAL CHANGES**
+
+### **Data Handling Rules**
+- **NEVER change how data is processed or displayed** without explicit user request
+- **Data structure and flow must remain exactly as currently implemented**
+- **Chart data processing logic is FROZEN** - no modifications without user approval
+- **Data fetching sources can be updated** but the processing pipeline must remain identical
+- **Chart data transformations must stay exactly as they are**
+
+### **Styles and Layout Rules**
+- **Overall layout containers and semantics MUST remain unchanged**
+- **Chart container structures cannot be modified**
+- **Component hierarchy and nesting must stay exactly as is**
+- **Only small style fixes allowed** - no structural changes
+- **Color schemes and brand colors are FROZEN**
+- **Responsive behavior must remain identical**
+
+### **Charts and Visualization Rules**
+- **Chart components are FROZEN** - no internal logic changes
+- **Chart rendering and data binding must remain exactly as implemented**
+- **Chart configurations and options cannot be modified**
+- **Chart container relationships must stay identical**
+- **Chart performance optimizations must preserve current behavior**
+
+## ✅ **ALLOWED CHANGES (With User Approval)**
+
+### **Data Source Updates**
+- Change WHERE data comes from (API endpoints, file paths)
+- Update data fetching methods
+- Modify data loading states
+- **BUT** data processing and display logic must remain identical
+
+### **Small Style Fixes**
+- Minor color adjustments (with user approval)
+- Small spacing tweaks
+- Typography refinements
+- **BUT** layout structure and component hierarchy must remain identical
+
+### **Bug Fixes**
+- Fix actual bugs that break functionality
+- Performance improvements that don't change behavior
+- Error handling improvements
+- **BUT** must preserve all current functionality
+
+## ❌ **FORBIDDEN CHANGES**
+
+### **Data Processing**
+- No changes to data transformation logic
+- No modifications to chart data processing
+- No changes to data structure or format
+- No modifications to data flow or state management
+
+### **Layout and Structure**
+- No changes to component hierarchy
+- No modifications to chart containers
+- No changes to responsive behavior
+- No modifications to layout semantics
+
+### **Chart Functionality**
+- No changes to chart rendering logic
+- No modifications to chart configurations
+- No changes to chart data binding
+- No modifications to chart performance optimizations
+
+## 🔍 **Verification Process**
+
+### **Before Any Change, Ask:**
+1. **Is this change explicitly requested by the user?**
+2. **Does this preserve all current functionality?**
+3. **Does this maintain the exact same data flow?**
+4. **Does this keep the same layout structure?**
+5. **Does this preserve chart behavior?**
+
+### **If Any Answer is NO:**
+- **STOP immediately**
+- **Ask for user clarification**
+- **Do not proceed with changes**
+
+## 📋 **Current Implementation References**
+
+### **Data Processing Files**
+- [dataProcessing.ts](mdc:src/lib/utils/dataProcessing.ts) - FROZEN
+- [chartDataProcessor.ts](mdc:src/lib/utils/chartDataProcessor.ts) - FROZEN
+- [reportDataProcessing.ts](mdc:src/lib/utils/reportDataProcessing.ts) - FROZEN
+
+### **Chart Components**
+- [ChartWrapper.tsx](mdc:src/components/Charts/ChartWrapper.tsx) - FROZEN
+- [DonutChart.tsx](mdc:src/components/Charts/DonutChart.tsx) - FROZEN
+- [LineChart.tsx](mdc:src/components/Charts/LineChart.tsx) - FROZEN
+
+### **Layout Components**
+- [Layout.tsx](mdc:src/components/Layout/Layout.tsx) - FROZEN
+- [Sidebar.tsx](mdc:src/components/Layout/Sidebar.tsx) - FROZEN
+- [ChartContainer.tsx](mdc:src/components/Dashboard/ChartContainer.tsx) - FROZEN
+
+## 🎯 **Implementation Guidelines**
+
+### **When User Requests Changes:**
+1. **Confirm the exact scope** of requested changes
+2. **Verify changes don't affect** frozen components
+3. **Test thoroughly** to ensure no side effects
+4. **Document changes** clearly for future reference
+
+### **When in Doubt:**
+- **Ask for clarification** before making any changes
+- **Propose alternatives** that don't modify frozen components
+- **Focus on user-approved changes only**
+- **Preserve all existing functionality**
+
+## 🚨 **Emergency Stop Conditions**
+
+### **If You Notice:**
+- Unintended changes to data processing
+- Modifications to chart rendering
+- Changes to layout structure
+- Alterations to component hierarchy
+- **STOP immediately and revert**
+
+### **If User Reports:**
+- Broken functionality
+- Changed behavior
+- Modified layouts
+- **Investigate and fix while preserving original functionality**
+
+---
+
+**Remember: This rule is designed to prevent unwanted changes while allowing necessary updates. Always prioritize preserving current functionality over making changes.**

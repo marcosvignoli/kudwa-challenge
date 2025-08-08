@@ -80,8 +80,8 @@ export const DonutChart = React.memo(
             )}
           </div>
         ) : (
-          <div className="w-full p-4">
-            <h3 className="text-lg font-semibold text-[#262626] mb-6">
+          <div className="w-full p-6">
+            <h3 className="text-lg font-semibold text-[#262626] mb-4">
               {title}
             </h3>
             <div
@@ -98,9 +98,9 @@ export const DonutChart = React.memo(
                   data={validData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={60}
-                  outerRadius={80}
-                  paddingAngle={2}
+                  innerRadius={45}
+                  outerRadius={70}
+                  paddingAngle={5}
                   dataKey="value"
                 >
                   {validData.map((entry, index) => (
@@ -131,12 +131,11 @@ export const DonutChart = React.memo(
                 />
                 <Legend
                   verticalAlign="bottom"
-                  height={120}
+                  height={100}
                   wrapperStyle={{
                     fontSize: "12px",
                     color: "#6B7280",
-                    paddingTop: "15px",
-                    lineHeight: "1.4",
+                    lineHeight: "1.6",
                   }}
                   layout="horizontal"
                   align="center"

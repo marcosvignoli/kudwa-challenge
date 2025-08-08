@@ -1,21 +1,17 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { fetchReportData, toggleSection } from "@/lib/slices/reportSlice";
 import { clearError } from "@/lib/slices/appSlice";
-import { LineChart, DonutChart, ChartWrapper } from "@/components/Charts";
-import { ChartDataProcessor } from "@/lib/utils/chartDataProcessor";
-import { extractFinancialSummary } from "@/lib/utils/reportDataProcessing";
-import { PeriodSelector } from "@/components/UI/PeriodSelector";
-import { ReportData } from "@/types/data";
+import { ReportData, ReportProfitLossItem, ReportField } from "@/types/data";
+import { KeyMetricsCharts } from "@/components/Report";
 
 export default function ReportPage() {
   const dispatch = useAppDispatch();
-  const { period } = useAppSelector((state) => state.app);
   const { data, loading, error, expandedSections } = useAppSelector(
-    (state) => state.report
+    (state: any) => state.report
   );
 
   useEffect(() => {
@@ -26,6 +22,10 @@ export default function ReportPage() {
     dispatch(toggleSection(sectionId));
   };
 
+  const handleToggleField = (sectionId: string, fieldId: string) => {
+    dispatch(toggleSection(`${sectionId}-${fieldId}`));
+  };
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -33,41 +33,38 @@ export default function ReportPage() {
     }).format(amount);
   };
 
-  // Extract financial summary data
-  const financialSummary = extractFinancialSummary(data as ReportData);
+  const formatPercentage = (value: number) => {
+    return `${value.toFixed(2)}%`;
+  };
 
-  // Generate date array for charts
-  const dateArray = ChartDataProcessor.generateReportDateArray(
-    data as ReportData,
-    period
-  );
+  // Extract report sections
+  const reportSections = useMemo(() => {
+    if (!data?.reportResult)
+      return { profitLoss: [], metrics: [], computedFields: [] };
 
-  // Get processed chart data using the standardized processor
-  const revenueDonutData = ChartDataProcessor.getReportDonutChartData(
-    data as ReportData,
-    "Total Revenues",
-    period,
-    8
-  );
+    return {
+      profitLoss: data.reportResult.profitnLoss || [],
+      metrics: data.reportResult.metrics || {},
+      computedFields: data.reportResult.computedFields || [],
+    };
+  }, [data]);
 
-  const expensesDonutData = ChartDataProcessor.getReportDonutChartData(
-    data as ReportData,
-    "Total Expenses",
-    period,
-    8
-  );
+  // Calculate totals for profit & loss items
+  const calculateItemTotal = (item: ReportProfitLossItem) => {
+    if (item.fields && item.fields.length > 0) {
+      return item.fields.reduce((total, field) => {
+        const fieldValues = field.actualData[0]?.value || [];
+        return total + fieldValues.reduce((sum, val) => sum + (val || 0), 0);
+      }, 0);
+    }
+    return 0;
+  };
 
-  const revenueLineData = ChartDataProcessor.getReportLineChartData(
-    data as ReportData,
-    "Total Revenues",
-    period
-  );
-
-  const expensesLineData = ChartDataProcessor.getReportLineChartData(
-    data as ReportData,
-    "Total Expenses",
-    period
-  );
+  // Calculate field total
+  const calculateFieldTotal = (field: ReportField) => {
+    const fieldValues = field.actualData[0]?.value || [];
+    return fieldValues.reduce((sum, val) => sum + (val || 0), 0);
+  };
 
   return (
     <motion.div
@@ -88,12 +85,9 @@ export default function ReportPage() {
             Financial Report
           </h1>
           <p className="text-base sm:text-lg text-[#6B7280]">
-            Comprehensive financial analysis and insights for {period} period
+            Dynamic financial analysis and insights
           </p>
         </div>
-
-        {/* Period Selector */}
-        <PeriodSelector className="mt-4 sm:mt-0" />
       </motion.div>
 
       {/* Loading State */}
@@ -134,7 +128,7 @@ export default function ReportPage() {
         </motion.div>
       )}
 
-      {/* Content */}
+      {/* Report Content */}
       {!loading && !error && data && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -142,184 +136,317 @@ export default function ReportPage() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="space-y-8"
         >
-          {/* Financial Summary */}
+          {/* Profit & Loss Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="space-y-6"
+            className="card"
           >
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.5 }}
-                className="card"
+            <motion.button
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              onClick={() => handleToggleSection("profitLoss")}
+              className="w-full text-left flex items-center justify-between hover:bg-[#FBFAFA]/50 transition-colors p-4 -m-4 rounded-lg"
+            >
+              <div>
+                <h3 className="text-xl font-semibold text-[#262626] mb-2">
+                  Profit & Loss Statement
+                </h3>
+                <span className="px-3 py-1 text-xs bg-[#B09280] text-white rounded-full font-medium">
+                  P&L
+                </span>
+              </div>
+              <motion.p
+                animate={{
+                  rotate: expandedSections.includes("profitLoss") ? 180 : 0,
+                }}
+                className="text-[#6B7280] text-lg"
               >
-                <h4 className="font-semibold text-[#262626] mb-3 text-lg">
-                  Cash at Bank
-                </h4>
-                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#B09280] mb-2 break-words">
-                  {formatCurrency(financialSummary.cashAtBank)}
-                </p>
-                <p className="text-[#6B7280]">Current balance</p>
-              </motion.div>
+                ▼
+              </motion.p>
+            </motion.button>
+
+            {expandedSections.includes("profitLoss") && (
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.6 }}
-                className="card"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                className="pt-6 space-y-4"
               >
-                <h4 className="font-semibold text-[#262626] mb-3 text-lg">
-                  Total Revenue
-                </h4>
-                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#698AC5] mb-2 break-words">
-                  {formatCurrency(financialSummary.revenue)}
-                </p>
-                <p className="text-[#6B7280]">This period</p>
+                {reportSections.profitLoss.map((item: ReportProfitLossItem) => {
+                  const itemTotal = calculateItemTotal(item);
+                  const isExpanded = expandedSections.includes(
+                    `profitLoss-${item.id}`
+                  );
+
+                  return (
+                    <motion.div
+                      key={item.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="border border-gray-200 rounded-lg p-4"
+                    >
+                      <motion.button
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
+                        onClick={() =>
+                          handleToggleField("profitLoss", item.id.toString())
+                        }
+                        className="w-full text-left flex items-center justify-between hover:bg-gray-50 transition-colors p-2 -m-2 rounded"
+                      >
+                        <div className="flex items-center space-x-3">
+                          <span
+                            className={`px-2 py-1 text-xs rounded-full font-medium ${
+                              item.type === "revenue"
+                                ? "bg-green-100 text-green-800"
+                                : item.type === "expenses"
+                                ? "bg-red-100 text-red-800"
+                                : "bg-gray-100 text-gray-800"
+                            }`}
+                          >
+                            {item.type}
+                          </span>
+                          <span className="font-medium text-[#262626]">
+                            {item.name}
+                          </span>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                          <span
+                            className={`font-semibold ${
+                              item.type === "revenue"
+                                ? "text-green-600"
+                                : item.type === "expenses"
+                                ? "text-red-600"
+                                : "text-gray-600"
+                            }`}
+                          >
+                            {formatCurrency(itemTotal)}
+                          </span>
+                          <motion.p
+                            animate={{ rotate: isExpanded ? 180 : 0 }}
+                            className="text-[#6B7280] text-sm"
+                          >
+                            ▼
+                          </motion.p>
+                        </div>
+                      </motion.button>
+
+                      {isExpanded && item.fields && item.fields.length > 0 && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="mt-4 pl-6 space-y-2"
+                        >
+                          {item.fields.map((field: ReportField) => {
+                            const fieldTotal = calculateFieldTotal(field);
+                            return (
+                              <motion.div
+                                key={field.id}
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded"
+                              >
+                                <span className="text-sm text-[#6B7280]">
+                                  {field.name}
+                                </span>
+                                <span className="text-sm font-medium text-[#262626]">
+                                  {formatCurrency(fieldTotal)}
+                                </span>
+                              </motion.div>
+                            );
+                          })}
+                        </motion.div>
+                      )}
+                    </motion.div>
+                  );
+                })}
               </motion.div>
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.7 }}
-                className="card"
-              >
-                <h4 className="font-semibold text-[#262626] mb-3 text-lg">
-                  Total Expenses
-                </h4>
-                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#EAE62F] mb-2 break-words">
-                  {formatCurrency(financialSummary.expenses)}
-                </p>
-                <p className="text-[#6B7280]">This period</p>
-              </motion.div>
-            </div>
+            )}
           </motion.div>
 
-          {/* Report Sections */}
+          {/* Enhanced Key Metrics Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            className="space-y-6"
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="card"
           >
-            {/* Revenue Analysis */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.9 }}
-              className="card"
+            <motion.button
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              onClick={() => handleToggleSection("metrics")}
+              className="w-full text-left flex items-center justify-between hover:bg-[#FBFAFA]/50 transition-colors p-4 -m-4 rounded-lg"
             >
-              <motion.button
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-                onClick={() => handleToggleSection("revenue")}
-                className="w-full text-left flex items-center justify-between hover:bg-[#FBFAFA]/50 transition-colors p-4 -m-4 rounded-lg"
+              <div>
+                <h3 className="text-xl font-semibold text-[#262626] mb-2">
+                  Key Performance Metrics
+                </h3>
+                <span className="px-3 py-1 text-xs bg-[#698AC5] text-white rounded-full font-medium">
+                  Enhanced KPIs
+                </span>
+              </div>
+              <motion.p
+                animate={{
+                  rotate: expandedSections.includes("metrics") ? 180 : 0,
+                }}
+                className="text-[#6B7280] text-lg"
               >
-                <div>
-                  <h3 className="text-xl font-semibold text-[#262626] mb-2">
-                    Revenue Analysis
-                  </h3>
-                  <span className="px-3 py-1 text-xs bg-[#B09280] text-white rounded-full font-medium">
-                    Revenue
-                  </span>
-                </div>
-                <motion.p
-                  animate={{
-                    rotate: expandedSections.includes("revenue") ? 180 : 0,
-                  }}
-                  className="text-[#6B7280] text-lg"
-                >
-                  ▼
-                </motion.p>
-              </motion.button>
-              {expandedSections.includes("revenue") && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="pt-6"
-                >
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 overflow-visible">
-                    <ChartWrapper title="Revenue Trend">
-                      <LineChart
-                        data={revenueLineData}
-                        title="Revenue Over Time"
-                        height={300}
-                        dateArray={dateArray}
-                      />
-                    </ChartWrapper>
-                    <ChartWrapper title="Revenue by Category">
-                      <DonutChart
-                        data={revenueDonutData}
-                        title="Revenue Breakdown"
-                        height={300}
-                      />
-                    </ChartWrapper>
-                  </div>
-                </motion.div>
-              )}
-            </motion.div>
+                ▼
+              </motion.p>
+            </motion.button>
 
-            {/* Expense Analysis */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 1.0 }}
-              className="card"
-            >
-              <motion.button
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-                onClick={() => handleToggleSection("expenses")}
-                className="w-full text-left flex items-center justify-between hover:bg-[#FBFAFA]/50 transition-colors p-4 -m-4 rounded-lg"
+            {expandedSections.includes("metrics") && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                className="pt-6"
               >
-                <div>
-                  <h3 className="text-xl font-semibold text-[#262626] mb-2">
-                    Expense Analysis
-                  </h3>
-                  <span className="px-3 py-1 text-xs bg-[#B09280] text-white rounded-full font-medium">
-                    Expenses
-                  </span>
-                </div>
-                <motion.p
-                  animate={{
-                    rotate: expandedSections.includes("expenses") ? 180 : 0,
-                  }}
-                  className="text-[#6B7280] text-lg"
-                >
-                  ▼
-                </motion.p>
-              </motion.button>
-              {expandedSections.includes("expenses") && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="pt-6"
-                >
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 overflow-visible">
-                    <ChartWrapper title="Expense Trend">
-                      <LineChart
-                        data={expensesLineData}
-                        title="Expenses Over Time"
-                        height={300}
-                        dateArray={dateArray}
-                      />
-                    </ChartWrapper>
-                    <ChartWrapper title="Expense Breakdown">
-                      <DonutChart
-                        data={expensesDonutData}
-                        title="Expenses by Category"
-                        height={300}
-                      />
-                    </ChartWrapper>
-                  </div>
-                </motion.div>
-              )}
-            </motion.div>
+                <KeyMetricsCharts
+                  reportData={data}
+                  period="monthly"
+                  loading={loading}
+                  error={error}
+                />
+              </motion.div>
+            )}
           </motion.div>
+
+          {/* Computed Fields Section */}
+          {reportSections.computedFields &&
+            reportSections.computedFields.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.8 }}
+                className="card"
+              >
+                <motion.button
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                  onClick={() => handleToggleSection("computedFields")}
+                  className="w-full text-left flex items-center justify-between hover:bg-[#FBFAFA]/50 transition-colors p-4 -m-4 rounded-lg"
+                >
+                  <div>
+                    <h3 className="text-xl font-semibold text-[#262626] mb-2">
+                      Computed Insights
+                    </h3>
+                    <span className="px-3 py-1 text-xs bg-[#EAE62F] text-[#262626] rounded-full font-medium">
+                      Calculated
+                    </span>
+                  </div>
+                  <motion.p
+                    animate={{
+                      rotate: expandedSections.includes("computedFields")
+                        ? 180
+                        : 0,
+                    }}
+                    className="text-[#6B7280] text-lg"
+                  >
+                    ▼
+                  </motion.p>
+                </motion.button>
+
+                {expandedSections.includes("computedFields") && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="pt-6 space-y-4"
+                  >
+                    {reportSections.computedFields.map(
+                      (field: any, index: number) => {
+                        // Calculate totals from different period data
+                        const resultTotal = field.result
+                          ? field.result.reduce(
+                              (sum: number, val: number) => sum + (val || 0),
+                              0
+                            )
+                          : 0;
+                        const quarterlyTotal = field.quarterly
+                          ? field.quarterly.reduce(
+                              (sum: number, val: number) => sum + (val || 0),
+                              0
+                            )
+                          : 0;
+                        const yearlyTotal = field.yearly
+                          ? field.yearly.reduce(
+                              (sum: number, val: number) => sum + (val || 0),
+                              0
+                            )
+                          : 0;
+
+                        return (
+                          <motion.div
+                            key={index}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="border border-gray-200 rounded-lg p-6"
+                          >
+                            <div className="flex items-center justify-between mb-4">
+                              <span className="text-lg font-semibold text-[#262626]">
+                                {field.name || `Computed Field ${index + 1}`}
+                              </span>
+                              <span className="px-3 py-1 text-xs bg-[#EAE62F] text-[#262626] rounded-full font-medium">
+                                Calculated
+                              </span>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                              <div className="text-center p-4 bg-[#FBFAFA] rounded-lg border border-gray-100">
+                                <div className="text-sm text-[#6B7280] mb-2">
+                                  Monthly
+                                </div>
+                                <div className="text-xl font-bold text-[#698AC5]">
+                                  {new Intl.NumberFormat("en-US", {
+                                    style: "currency",
+                                    currency: "USD",
+                                    minimumFractionDigits: 0,
+                                    maximumFractionDigits: 0,
+                                  }).format(resultTotal)}
+                                </div>
+                              </div>
+                              <div className="text-center p-4 bg-[#FBFAFA] rounded-lg border border-gray-100">
+                                <div className="text-sm text-[#6B7280] mb-2">
+                                  Quarterly
+                                </div>
+                                <div className="text-xl font-bold text-[#B09280]">
+                                  {new Intl.NumberFormat("en-US", {
+                                    style: "currency",
+                                    currency: "USD",
+                                    minimumFractionDigits: 0,
+                                    maximumFractionDigits: 0,
+                                  }).format(quarterlyTotal)}
+                                </div>
+                              </div>
+                              <div className="text-center p-4 bg-[#FBFAFA] rounded-lg border border-gray-100">
+                                <div className="text-sm text-[#6B7280] mb-2">
+                                  Yearly
+                                </div>
+                                <div className="text-xl font-bold text-[#EAE62F]">
+                                  {new Intl.NumberFormat("en-US", {
+                                    style: "currency",
+                                    currency: "USD",
+                                    minimumFractionDigits: 0,
+                                    maximumFractionDigits: 0,
+                                  }).format(yearlyTotal)}
+                                </div>
+                              </div>
+                            </div>
+                          </motion.div>
+                        );
+                      }
+                    )}
+                  </motion.div>
+                )}
+              </motion.div>
+            )}
         </motion.div>
       )}
     </motion.div>

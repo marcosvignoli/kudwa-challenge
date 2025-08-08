@@ -213,16 +213,99 @@ export class ChartDataProcessor {
       (item) => item.name === categoryName
     );
 
-    if (!category || !category.fields || category.fields.length === 0) {
+    if (!category) {
       return [];
     }
 
-    // Process report data to match dashboard format
-    return category.fields.map((field) => ({
-      name: field.name,
-      values: field.actualData[0]?.value || [],
-      chartType: "line",
-    }));
+    // If category has fields, use them
+    if (category.fields && category.fields.length > 0) {
+      // For categories with fields, use the field data for all periods
+      // (since fields only have monthly data, we'll use that for all periods)
+      return category.fields.map((field) => ({
+        name: field.name,
+        values: field.actualData[0]?.value || [],
+        chartType: "line",
+      }));
+    }
+
+    // If no fields, try to use period-specific data
+    let periodData: number[] = [];
+
+    switch (period) {
+      case "monthly":
+        periodData = (category.result as number[]) || [];
+        break;
+      case "quarterly":
+        periodData = (category.quarterlyResult as number[]) || [];
+        break;
+      case "yearly":
+        periodData = (category.yearlyResult as number[]) || [];
+        break;
+    }
+
+    // If we have period-specific data, return it as a single series
+    if (periodData.length > 0) {
+      return [
+        {
+          name: category.name,
+          values: periodData,
+          chartType: "line",
+        },
+      ];
+    }
+
+    // Fallback to actualData if available
+    if (category.actualData && category.actualData.length > 0) {
+      return [
+        {
+          name: category.name,
+          values: category.actualData[0]?.value || [],
+          chartType: "line",
+        },
+      ];
+    }
+
+    return [];
+  }
+
+  /**
+   * Extract computed field data for charts
+   */
+  static extractComputedFieldData(
+    data: ReportData | null,
+    fieldName: string,
+    period: "monthly" | "quarterly" | "yearly" = "monthly"
+  ): ChartDataItem[] {
+    if (!data?.reportResult?.computedFields) return [];
+
+    const field = data.reportResult.computedFields.find(
+      (item) => item.name === fieldName
+    );
+
+    if (!field) return [];
+
+    let periodData: number[] = [];
+    switch (period) {
+      case "monthly":
+        periodData = field.result || [];
+        break;
+      case "quarterly":
+        periodData = field.quarterly || [];
+        break;
+      case "yearly":
+        periodData = field.yearly || [];
+        break;
+    }
+
+    if (periodData.length === 0) return [];
+
+    return [
+      {
+        name: field.name,
+        values: periodData,
+        chartType: "line",
+      },
+    ];
   }
 
   /**
@@ -277,6 +360,32 @@ export class ChartDataProcessor {
   }
 
   /**
+   * Get processed line chart data for computed fields
+   */
+  static getComputedFieldLineChartData(
+    data: ReportData | null,
+    fieldName: string,
+    period: "monthly" | "quarterly" | "yearly" = "monthly"
+  ): ProcessedLineChartData[] {
+    const rawData = this.extractComputedFieldData(data, fieldName, period);
+    const dateArray = this.generateReportDateArray(data, period);
+    return this.processLineChartData(rawData, dateArray, 8);
+  }
+
+  /**
+   * Get processed donut chart data for computed fields
+   */
+  static getComputedFieldDonutChartData(
+    data: ReportData | null,
+    fieldName: string,
+    period: "monthly" | "quarterly" | "yearly" = "monthly",
+    maxCategories: number = 8
+  ): ProcessedChartData[] {
+    const rawData = this.extractComputedFieldData(data, fieldName, period);
+    return this.processDonutChartData(rawData, maxCategories);
+  }
+
+  /**
    * Generate date array for report data
    */
   static generateReportDateArray(
@@ -298,14 +407,36 @@ export class ChartDataProcessor {
       "Dec",
     ];
 
+    const quarters = ["Q1", "Q2", "Q3", "Q4"];
     const dateArray: string[] = [];
     const startYear = 2024;
     const endYear = 2025;
 
-    for (let year = startYear; year <= endYear; year++) {
-      for (let month = 0; month < 12; month++) {
-        dateArray.push(`${months[month]} ${year}`);
-      }
+    switch (period) {
+      case "monthly":
+        // Generate monthly dates
+        for (let year = startYear; year <= endYear; year++) {
+          for (let month = 0; month < 12; month++) {
+            dateArray.push(`${months[month]} ${year}`);
+          }
+        }
+        break;
+
+      case "quarterly":
+        // Generate quarterly dates
+        for (let year = startYear; year <= endYear; year++) {
+          for (let quarter = 0; quarter < 4; quarter++) {
+            dateArray.push(`${quarters[quarter]} ${year}`);
+          }
+        }
+        break;
+
+      case "yearly":
+        // Generate yearly dates
+        for (let year = startYear; year <= endYear; year++) {
+          dateArray.push(`${year}`);
+        }
+        break;
     }
 
     return dateArray;

@@ -75,19 +75,6 @@ const Sidebar = ({ className = "" }: SidebarProps) => {
           );
         })}
       </nav>
-
-      {/* Footer */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.4 }}
-        className="absolute bottom-6 left-6 right-6"
-      >
-        <div className="text-xs text-[#6B7280] text-center">
-          <p>Kudwa Challenge</p>
-          <p>Frontend Dashboard</p>
-        </div>
-      </motion.div>
     </motion.aside>
   );
 };
