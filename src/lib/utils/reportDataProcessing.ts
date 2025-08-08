@@ -148,6 +148,7 @@ export const getAvailableCategories = (reportData: ReportData | null) => {
  */
 export const processLineChartData = (
   data: unknown[],
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   dateArray: string[] = []
 ) => {
   if (!Array.isArray(data)) return [];
@@ -398,11 +399,14 @@ export const groupSmallValues = (data: unknown[], threshold: number = 5) => {
  */
 export const generateReportDateArray = (
   reportData: ReportData | null,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   period: "monthly" | "quarterly" | "yearly"
 ): string[] => {
   if (!reportData?.reportResult) return [];
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const startDate = reportData.reportResult.startingDate;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const endDate = reportData.reportResult.endingDate;
 
   // For now, generate a simple date array based on the period

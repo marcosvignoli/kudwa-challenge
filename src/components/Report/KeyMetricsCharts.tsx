@@ -4,6 +4,13 @@ import { LineChart, DonutChart, ChartWrapper } from "@/components/Charts";
 import { ChartDataProcessor } from "@/lib/utils/chartDataProcessor";
 import { ReportData } from "@/types/data";
 
+interface ComputedField {
+  name: string;
+  result?: number[];
+  quarterly?: number[];
+  yearly?: number[];
+}
+
 interface KeyMetricsChartsProps {
   reportData: ReportData | null;
   period: "monthly" | "quarterly" | "yearly";
@@ -50,18 +57,32 @@ export const KeyMetricsCharts = React.memo(
     );
 
     // Calculate key metrics for display with better validation
-    const calculateMetricValue = (data: any[]) => {
+    const calculateMetricValue = (data: unknown[]) => {
       if (!data || data.length === 0) return 0;
-      const total = data.reduce((sum, item) => sum + (item.value || 0), 0);
+      const total = data.reduce((sum: number, item) => {
+        if (item && typeof item === "object" && "values" in item) {
+          const values = Array.isArray((item as { values: unknown }).values)
+            ? (item as { values: number[] }).values
+            : [(item as { values: number }).values];
+          return (
+            sum +
+            values.reduce(
+              (valSum: number, val: number) => valSum + (val || 0),
+              0
+            )
+          );
+        }
+        return sum;
+      }, 0);
       return total > 0 ? total : 0;
     };
 
     // Calculate computed field totals directly from data
     const calculateComputedFieldTotal = (fieldName: string) => {
       if (!reportData?.reportResult?.computedFields) return 0;
-      const field = reportData.reportResult.computedFields.find(
-        (item) => item.name === fieldName
-      );
+      const field = (
+        reportData.reportResult.computedFields as ComputedField[]
+      ).find((item: ComputedField) => item.name === fieldName);
       if (!field || !field.result) return 0;
       const total = field.result.reduce((sum, val) => sum + (val || 0), 0);
       return total > 0 ? total : 0;

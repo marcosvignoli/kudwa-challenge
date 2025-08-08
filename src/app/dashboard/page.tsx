@@ -11,6 +11,19 @@ import { PeriodSelector, ErrorBoundary } from "@/components/UI";
 import { ChartDataProcessor } from "@/lib/utils/chartDataProcessor";
 import { KPIData } from "@/types/data";
 
+/**
+ * Dashboard Page Component
+ *
+ * Main dashboard page that displays financial metrics, charts, and KPIs.
+ * Features:
+ * - Period switching (monthly/quarterly/yearly)
+ * - Real-time data loading with Redux
+ * - Performance optimized with React.memo, useCallback, useMemo
+ * - Responsive design with mobile optimization
+ * - Error boundaries for graceful error handling
+ * - Loading states and error display
+ */
+
 export default function DashboardPage() {
   const dispatch = useAppDispatch();
   const { period } = useAppSelector((state) => state.app);
@@ -141,7 +154,7 @@ export default function DashboardPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
+              className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
             >
               {kpiData.map((kpi: KPIData, index: number) => (
                 <MetricCard

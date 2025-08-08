@@ -1,5 +1,12 @@
 import { MainDashboardData, ReportData } from "@/types/data";
 
+interface ComputedField {
+  name: string;
+  result?: number[];
+  quarterly?: number[];
+  yearly?: number[];
+}
+
 // Standard chart data interface
 export interface ChartDataItem {
   name: string;
@@ -278,8 +285,8 @@ export class ChartDataProcessor {
   ): ChartDataItem[] {
     if (!data?.reportResult?.computedFields) return [];
 
-    const field = data.reportResult.computedFields.find(
-      (item) => item.name === fieldName
+    const field = (data.reportResult.computedFields as ComputedField[]).find(
+      (item: ComputedField) => item.name === fieldName
     );
 
     if (!field) return [];

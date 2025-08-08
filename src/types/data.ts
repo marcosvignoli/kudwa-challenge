@@ -29,14 +29,6 @@ export interface MainDashboardData {
   };
 }
 
-export interface FinancialMetrics {
-  cashAtBank: ChartData[];
-  revenue: ChartData[];
-  expenses: ChartData[];
-  profit: ChartData[];
-  // Additional metrics as per JSON structure
-}
-
 export type PeriodType = "monthly" | "quarterly" | "yearly";
 
 export interface DashboardState {
@@ -106,26 +98,6 @@ export interface ReportProfitLossItem {
   yearlyResult: unknown;
 }
 
-export interface ReportMetrics {
-  // Add metrics structure when needed
-  [key: string]: unknown;
-}
-
-export interface ReportComputedField {
-  result: number[];
-  pastMonth: number[];
-  yearly: number[];
-  quarterly: number[];
-  yearlyPastMonth: number[];
-  quarterlyPastMonth: number[];
-  currentYearActual: number[];
-  currentQuarterActual: number[];
-  name: string;
-  totalResult?: number[];
-}
-
-export type ReportComputedFields = ReportComputedField[];
-
 export interface ReportData {
   reportResult: {
     id: number;
@@ -135,8 +107,8 @@ export interface ReportData {
     createdAt: string;
     updatedAt: string;
     profitnLoss: ReportProfitLossItem[];
-    metrics: ReportMetrics;
-    computedFields: ReportComputedFields;
+    metrics: Record<string, unknown>;
+    computedFields: unknown[];
   };
 }
 

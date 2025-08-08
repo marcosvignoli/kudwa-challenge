@@ -29,10 +29,10 @@ export const MetricCard = React.memo(
         animate={{ opacity: 1, y: 0 }}
         whileHover={{ scale: 1.02, y: -2 }}
         transition={{ duration: 0.3 }}
-        className="card hover:shadow-md transition-all duration-200"
+        className="card hover:shadow-md transition-all duration-200 h-full flex flex-col"
       >
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
+        <div className="flex items-start justify-between flex-1">
+          <div className="flex-1 flex flex-col">
             <div className="flex items-center space-x-2 sm:space-x-3 mb-2 sm:mb-3">
               {icon && <span className="text-xl sm:text-2xl">{icon}</span>}
               <h3 className="text-base sm:text-lg font-semibold text-[#262626] leading-tight">
@@ -49,7 +49,7 @@ export const MetricCard = React.memo(
               {subtitle}
             </p>
             {change && (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 mt-auto">
                 <span
                   className={`text-xs sm:text-sm font-medium px-2 py-1 rounded-full ${
                     changeType === "positive"

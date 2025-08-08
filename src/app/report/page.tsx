@@ -1,29 +1,61 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { fetchReportData, toggleSection } from "@/lib/slices/reportSlice";
-import { clearError } from "@/lib/slices/appSlice";
-import { ReportData, ReportProfitLossItem, ReportField } from "@/types/data";
-import { KeyMetricsCharts } from "@/components/Report";
+import { toggleExpandedSection } from "@/lib/slices/uiSlice";
+import { loadReportData } from "@/lib/data";
+import { ReportProfitLossItem, ReportField, ReportData } from "@/types/data";
+import { KeyMetricsCharts, ComputedInsights } from "@/components/Report";
+
+/**
+ * Report Page Component
+ *
+ * Comprehensive financial report page with expandable sections and interactive charts.
+ * Features:
+ * - Dynamic data loading from JSON files
+ * - Expandable/collapsible sections for better UX
+ * - Interactive charts with period switching
+ * - Real-time data processing and calculations
+ * - Responsive design optimized for mobile
+ * - Error boundaries and loading states
+ * - Professional financial data visualization
+ */
 
 export default function ReportPage() {
   const dispatch = useAppDispatch();
-  const { data, loading, error, expandedSections } = useAppSelector(
-    (state: any) => state.report
-  );
+  const { expandedSections } = useAppSelector((state) => state.ui);
+  const [data, setData] = useState<ReportData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [period] = useState<"monthly" | "quarterly" | "yearly">("monthly");
 
   useEffect(() => {
-    dispatch(fetchReportData());
-  }, [dispatch]);
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const reportData = await loadReportData();
+        setData(reportData);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Failed to load report data"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
 
   const handleToggleSection = (sectionId: string) => {
-    dispatch(toggleSection(sectionId));
+    dispatch(toggleExpandedSection(sectionId));
   };
 
   const handleToggleField = (sectionId: string, fieldId: string) => {
-    dispatch(toggleSection(`${sectionId}-${fieldId}`));
+    const fieldKey = `${sectionId}-${fieldId}`;
+    dispatch(toggleExpandedSection(fieldKey));
   };
 
   const formatCurrency = (amount: number) => {
@@ -33,19 +65,13 @@ export default function ReportPage() {
     }).format(amount);
   };
 
-  const formatPercentage = (value: number) => {
-    return `${value.toFixed(2)}%`;
-  };
-
   // Extract report sections
   const reportSections = useMemo(() => {
-    if (!data?.reportResult)
-      return { profitLoss: [], metrics: [], computedFields: [] };
+    if (!data?.reportResult) return { profitLoss: [], metrics: [] };
 
     return {
       profitLoss: data.reportResult.profitnLoss || [],
       metrics: data.reportResult.metrics || {},
-      computedFields: data.reportResult.computedFields || [],
     };
   }, [data]);
 
@@ -119,7 +145,7 @@ export default function ReportPage() {
               <p className="text-red-700 font-medium">{error}</p>
             </div>
             <button
-              onClick={() => dispatch(clearError())}
+              onClick={() => setError(null)}
               className="text-red-500 hover:text-red-700 text-sm underline font-medium"
             >
               Dismiss
@@ -136,6 +162,9 @@ export default function ReportPage() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="space-y-8"
         >
+          {/* Computed Insights Section */}
+          <ComputedInsights reportData={data} period={period} />
+
           {/* Profit & Loss Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -316,137 +345,6 @@ export default function ReportPage() {
               </motion.div>
             )}
           </motion.div>
-
-          {/* Computed Fields Section */}
-          {reportSections.computedFields &&
-            reportSections.computedFields.length > 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.8 }}
-                className="card"
-              >
-                <motion.button
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                  onClick={() => handleToggleSection("computedFields")}
-                  className="w-full text-left flex items-center justify-between hover:bg-[#FBFAFA]/50 transition-colors p-4 -m-4 rounded-lg"
-                >
-                  <div>
-                    <h3 className="text-xl font-semibold text-[#262626] mb-2">
-                      Computed Insights
-                    </h3>
-                    <span className="px-3 py-1 text-xs bg-[#EAE62F] text-[#262626] rounded-full font-medium">
-                      Calculated
-                    </span>
-                  </div>
-                  <motion.p
-                    animate={{
-                      rotate: expandedSections.includes("computedFields")
-                        ? 180
-                        : 0,
-                    }}
-                    className="text-[#6B7280] text-lg"
-                  >
-                    ▼
-                  </motion.p>
-                </motion.button>
-
-                {expandedSections.includes("computedFields") && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="pt-6 space-y-4"
-                  >
-                    {reportSections.computedFields.map(
-                      (field: any, index: number) => {
-                        // Calculate totals from different period data
-                        const resultTotal = field.result
-                          ? field.result.reduce(
-                              (sum: number, val: number) => sum + (val || 0),
-                              0
-                            )
-                          : 0;
-                        const quarterlyTotal = field.quarterly
-                          ? field.quarterly.reduce(
-                              (sum: number, val: number) => sum + (val || 0),
-                              0
-                            )
-                          : 0;
-                        const yearlyTotal = field.yearly
-                          ? field.yearly.reduce(
-                              (sum: number, val: number) => sum + (val || 0),
-                              0
-                            )
-                          : 0;
-
-                        return (
-                          <motion.div
-                            key={index}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            className="border border-gray-200 rounded-lg p-6"
-                          >
-                            <div className="flex items-center justify-between mb-4">
-                              <span className="text-lg font-semibold text-[#262626]">
-                                {field.name || `Computed Field ${index + 1}`}
-                              </span>
-                              <span className="px-3 py-1 text-xs bg-[#EAE62F] text-[#262626] rounded-full font-medium">
-                                Calculated
-                              </span>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                              <div className="text-center p-4 bg-[#FBFAFA] rounded-lg border border-gray-100">
-                                <div className="text-sm text-[#6B7280] mb-2">
-                                  Monthly
-                                </div>
-                                <div className="text-xl font-bold text-[#698AC5]">
-                                  {new Intl.NumberFormat("en-US", {
-                                    style: "currency",
-                                    currency: "USD",
-                                    minimumFractionDigits: 0,
-                                    maximumFractionDigits: 0,
-                                  }).format(resultTotal)}
-                                </div>
-                              </div>
-                              <div className="text-center p-4 bg-[#FBFAFA] rounded-lg border border-gray-100">
-                                <div className="text-sm text-[#6B7280] mb-2">
-                                  Quarterly
-                                </div>
-                                <div className="text-xl font-bold text-[#B09280]">
-                                  {new Intl.NumberFormat("en-US", {
-                                    style: "currency",
-                                    currency: "USD",
-                                    minimumFractionDigits: 0,
-                                    maximumFractionDigits: 0,
-                                  }).format(quarterlyTotal)}
-                                </div>
-                              </div>
-                              <div className="text-center p-4 bg-[#FBFAFA] rounded-lg border border-gray-100">
-                                <div className="text-sm text-[#6B7280] mb-2">
-                                  Yearly
-                                </div>
-                                <div className="text-xl font-bold text-[#EAE62F]">
-                                  {new Intl.NumberFormat("en-US", {
-                                    style: "currency",
-                                    currency: "USD",
-                                    minimumFractionDigits: 0,
-                                    maximumFractionDigits: 0,
-                                  }).format(yearlyTotal)}
-                                </div>
-                              </div>
-                            </div>
-                          </motion.div>
-                        );
-                      }
-                    )}
-                  </motion.div>
-                )}
-              </motion.div>
-            )}
         </motion.div>
       )}
     </motion.div>

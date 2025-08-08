@@ -45,6 +45,7 @@ describe("MetricCard", () => {
   });
 
   it("should handle missing change prop", () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { change, changeType, ...propsWithoutChange } = defaultProps;
 
     render(<MetricCard {...propsWithoutChange} />);
@@ -55,6 +56,7 @@ describe("MetricCard", () => {
   });
 
   it("should handle missing icon prop", () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { icon, ...propsWithoutIcon } = defaultProps;
 
     render(<MetricCard {...propsWithoutIcon} />);
