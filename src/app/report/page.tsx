@@ -9,6 +9,7 @@ import { LineChart, DonutChart, ChartWrapper } from "@/components/Charts";
 import { ChartDataProcessor } from "@/lib/utils/chartDataProcessor";
 import { extractFinancialSummary } from "@/lib/utils/reportDataProcessing";
 import { PeriodSelector } from "@/components/UI/PeriodSelector";
+import { ReportData } from "@/types/data";
 
 export default function ReportPage() {
   const dispatch = useAppDispatch();
@@ -33,37 +34,37 @@ export default function ReportPage() {
   };
 
   // Extract financial summary data
-  const financialSummary = extractFinancialSummary(data as any);
+  const financialSummary = extractFinancialSummary(data as ReportData);
 
   // Generate date array for charts
   const dateArray = ChartDataProcessor.generateReportDateArray(
-    data as any,
+    data as ReportData,
     period
   );
 
   // Get processed chart data using the standardized processor
   const revenueDonutData = ChartDataProcessor.getReportDonutChartData(
-    data as any,
+    data as ReportData,
     "Total Revenues",
     period,
     8
   );
 
   const expensesDonutData = ChartDataProcessor.getReportDonutChartData(
-    data as any,
+    data as ReportData,
     "Total Expenses",
     period,
     8
   );
 
   const revenueLineData = ChartDataProcessor.getReportLineChartData(
-    data as any,
+    data as ReportData,
     "Total Revenues",
     period
   );
 
   const expensesLineData = ChartDataProcessor.getReportLineChartData(
-    data as any,
+    data as ReportData,
     "Total Expenses",
     period
   );
@@ -73,20 +74,20 @@ export default function ReportPage() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="space-y-8"
+      className="space-y-6 sm:space-y-8 min-h-screen"
     >
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.1 }}
-        className="flex flex-col sm:flex-row sm:items-center sm:justify-between"
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0"
       >
         <div>
-          <h1 className="text-4xl font-bold text-[#262626] mb-2">
+          <h1 className="text-3xl sm:text-4xl font-bold text-[#262626] mb-2">
             Financial Report
           </h1>
-          <p className="text-[#6B7280] text-lg">
+          <p className="text-base sm:text-lg text-[#6B7280]">
             Comprehensive financial analysis and insights for {period} period
           </p>
         </div>
@@ -239,7 +240,7 @@ export default function ReportPage() {
                   transition={{ duration: 0.3 }}
                   className="pt-6"
                 >
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 overflow-visible">
                     <ChartWrapper title="Revenue Trend">
                       <LineChart
                         data={revenueLineData}
@@ -298,7 +299,7 @@ export default function ReportPage() {
                   transition={{ duration: 0.3 }}
                   className="pt-6"
                 >
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 overflow-visible">
                     <ChartWrapper title="Expense Trend">
                       <LineChart
                         data={expensesLineData}

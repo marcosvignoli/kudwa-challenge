@@ -26,22 +26,23 @@ const MobileMenu = ({ onClose }: MobileMenuProps) => {
 
   return (
     <>
-      {/* Backdrop */}
+      {/* Backdrop - Changed to rgba with transparency */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+        className="fixed inset-0 z-40 md:hidden"
+        style={{ backgroundColor: "rgba(0, 0, 0, 0.3)" }}
       />
 
-      {/* Menu Panel */}
+      {/* Menu Panel - Changed background to rgba with transparency */}
       <motion.div
-        initial={{ x: -300, opacity: 0 }}
+        initial={{ x: 300, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
-        exit={{ x: -300, opacity: 0 }}
+        exit={{ x: 300, opacity: 0 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
-        className="fixed left-0 top-0 h-full w-80 bg-white shadow-xl z-50 md:hidden"
+        className="fixed right-0 top-0 h-full w-80 bg-white/95 backdrop-blur-sm shadow-xl z-50 md:hidden"
       >
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
@@ -78,7 +79,7 @@ const MobileMenu = ({ onClose }: MobileMenuProps) => {
             return (
               <motion.div
                 key={item.href}
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.4, delay: 0.1 + index * 0.1 }}
               >

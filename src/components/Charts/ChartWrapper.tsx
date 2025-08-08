@@ -23,7 +23,7 @@ export const ChartWrapper = ({
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
-      className={`bg-white rounded-lg border border-gray-200 shadow-sm p-6 ${className}`}
+      className={`bg-white rounded-lg border border-gray-200 shadow-sm p-6 overflow-visible ${className}`}
     >
       <div className="mb-4">
         <h3 className="text-lg font-semibold text-[#262626]">{title}</h3>
@@ -48,7 +48,7 @@ export const ChartWrapper = ({
         </div>
       )}
 
-      {!loading && !error && children}
+      {!loading && !error && <div className="overflow-visible">{children}</div>}
     </motion.div>
   );
 };

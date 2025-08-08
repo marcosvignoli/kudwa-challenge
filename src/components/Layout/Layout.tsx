@@ -21,10 +21,10 @@ const Layout = ({ children }: LayoutProps) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="flex h-screen bg-[#FBFAFA]"
+      className="flex min-h-screen bg-[#FBFAFA]"
     >
-      {/* Mobile Menu Button */}
-      <div className="md:hidden fixed top-4 left-4 z-50">
+      {/* Mobile Menu Button - Moved to right side */}
+      <div className="md:hidden fixed top-4 right-4 z-50">
         <button
           onClick={toggleMobileMenu}
           className="p-2 rounded-lg bg-white shadow-md border border-gray-200 hover:bg-gray-50 transition-colors"
@@ -62,7 +62,7 @@ const Layout = ({ children }: LayoutProps) => {
       <Sidebar className="hidden md:block" />
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto w-full md:w-auto">
+      <main className="flex-1 w-full md:w-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

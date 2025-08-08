@@ -111,10 +111,20 @@ export interface ReportMetrics {
   [key: string]: unknown;
 }
 
-export interface ReportComputedFields {
-  // Add computed fields structure when needed
-  [key: string]: unknown;
+export interface ReportComputedField {
+  result: number[];
+  pastMonth: number[];
+  yearly: number[];
+  quarterly: number[];
+  yearlyPastMonth: number[];
+  quarterlyPastMonth: number[];
+  currentYearActual: number[];
+  currentQuarterActual: number[];
+  name: string;
+  totalResult?: number[];
 }
+
+export type ReportComputedFields = ReportComputedField[];
 
 export interface ReportData {
   reportResult: {

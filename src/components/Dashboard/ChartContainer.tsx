@@ -13,10 +13,12 @@ export const ChartContainer = ({ title, children }: ChartContainerProps) => {
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -2 }}
       transition={{ duration: 0.3 }}
-      className="card hover:shadow-md transition-all duration-200"
+      className="card hover:shadow-md transition-all duration-200 overflow-visible"
     >
-      <h3 className="text-xl font-semibold text-[#262626] mb-6">{title}</h3>
-      {children}
+      <h3 className="text-lg sm:text-xl font-semibold text-[#262626] mb-4 sm:mb-6">
+        {title}
+      </h3>
+      <div className="overflow-visible">{children}</div>
     </motion.div>
   );
 };

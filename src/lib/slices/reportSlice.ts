@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { loadReportData } from "../data";
+import { ReportData } from "@/types/data";
 
 interface ReportState {
-  data: any | null;
+  data: ReportData | null;
   loading: boolean;
   error: string | null;
   expandedSections: string[];
