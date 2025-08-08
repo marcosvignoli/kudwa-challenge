@@ -102,16 +102,16 @@ export const LineChart = ({
                   type="monotone"
                   dataKey={series.name}
                   stroke={colors[index % colors.length]}
-                  strokeWidth={2}
+                  strokeWidth={3}
                   dot={{
                     fill: colors[index % colors.length],
                     strokeWidth: 2,
-                    r: 4,
+                    r: 5,
                   }}
                   activeDot={{
-                    r: 6,
+                    r: 8,
                     stroke: colors[index % colors.length],
-                    strokeWidth: 2,
+                    strokeWidth: 3,
                   }}
                 />
               ))}

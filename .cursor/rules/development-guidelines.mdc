@@ -32,13 +32,17 @@
 - Use **custom hooks** for shared logic
 - Follow **single responsibility principle**
 - Implement **proper prop drilling** or context when needed
+- **NO components inside components** - each in own file
+- **If written twice → make it a component**
 
-### Performance Optimization
+### Performance Optimization (CRITICAL)
 - Use **React.memo** for expensive components
 - Implement **useCallback** for function props
 - Use **useMemo** for expensive calculations
 - Optimize **re-renders** with proper dependencies
 - Implement **lazy loading** for large components
+- **Minimize re-renders** - critical for performance
+- **Use data caching** and optimization
 
 ### Next.js App Router
 - Use **app directory** structure
@@ -51,8 +55,8 @@
 - Use `next/image` for optimized images
 - Use `next/head` for SEO and meta tags
 
-### State Management with Redux Toolkit
-- Use **Redux Toolkit** for global state management
+### State Management with Redux Toolkit (REQUIRED)
+- Use **Redux Toolkit** for global state management (challenge requirement)
 - Implement **slices** for different data domains (dashboard, reports)
 - Use **createSlice** for reducer and actions
 - Implement **createAsyncThunk** for async operations
@@ -71,6 +75,7 @@
 - **Separate Files**: Create new component files instead of inline components
 - **Import Components**: Always import reusable components from separate files
 - **Avoid Over-engineering**: Keep complexity at a decent level, don't over-engineer
+- **NO code duplication** - reuse components when possible
 
 ### Reusable Component Patterns
 ```typescript
@@ -114,6 +119,8 @@ const InlineComponent = () => { ... }; // Avoid this pattern
 - **Component tests** for reusable components
 - **Integration tests** for page flows
 - **E2E tests** for critical user journeys
+- **Use Jest and React Testing Library** (user preference)
+- **Focus on critical functionality** only
 
 ### Testing Best Practices
 - Use **React Testing Library** for component tests
@@ -130,6 +137,7 @@ const InlineComponent = () => { ... }; // Avoid this pattern
 - Separate **business logic** from UI components
 - Organize **types** in dedicated files
 - Keep **utility functions** in lib directory
+- **Keep current file structure** (working well)
 
 ### Naming Conventions
 - **PascalCase** for components and interfaces
@@ -144,6 +152,7 @@ const InlineComponent = () => { ... }; // Avoid this pattern
 - Provide **user-friendly error messages**
 - Log **errors** for debugging
 - Handle **edge cases** gracefully
+- **Error boundaries and fallbacks required**
 
 ### Git Commit Standards
 - **Use conventional commit format**:
@@ -227,6 +236,7 @@ const ResponsiveComponent = () => {
 - Use **useMemo** for expensive calculations
 - Optimize **re-renders** with proper dependencies
 - Implement **lazy loading** for large components
+- **Everything works smooth without errors**
 
 ### Bundle Optimization
 - **Code splitting** with dynamic imports
@@ -240,5 +250,37 @@ const ResponsiveComponent = () => {
 - **Debounce chart updates** during rapid changes
 - **Optimize chart rendering** with proper memoization
 - **Lazy load chart components** when needed
+
+## Challenge Requirements Focus
+
+### Strict Implementation
+- **ONLY implement what's written in the challenge**
+- **NO additional features beyond challenge requirements**
+- **NO assumptions - stick to exact challenge specifications**
+- **Modern implementations of required features only**
+
+### Data Handling
+- **Use data exactly as provided - NEVER modify**
+- **Implement data caching and optimization**
+- **Use React.memo, useCallback, useMemo**
+- **Minimize re-renders**
+- **Follow React best practices for performance**
+
+### Brand Compliance
+- **Use EXACTLY the provided Kudwa colors**:
+  - `#B09280` (Primary Brown)
+  - `#EAE62F` (Accent Yellow)
+  - `#698AC5` (Secondary Blue)
+  - `#262626` (Dark Gray)
+  - `#FBFAFA` (Light Background)
+
+### Animation & UX
+- **Minimal to moderate animations only**
+- **Don't overload with movement**
+- **Keep dynamics enough**
+- **Mobile-optimized design**
+- **Loading spinners for loading states**
+- **User feedback for error handling**
+
 alwaysApply: true
 ---

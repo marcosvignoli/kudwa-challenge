@@ -11,20 +11,13 @@ import {
 interface DonutChartProps {
   data: Array<{
     name: string;
-    values: number | number[];
-    chartType?: string;
+    value: number;
   }>;
   title: string;
   height?: number;
 }
 
 export const DonutChart = ({ data, title, height = 300 }: DonutChartProps) => {
-  // Process data for Recharts - handle both single values and arrays
-  const processedData = data.map((item) => ({
-    name: item.name,
-    value: Array.isArray(item.values) ? item.values[0] || 0 : item.values,
-  }));
-
   // Kudwa brand colors
   const colors = [
     "#B09280",
@@ -37,6 +30,9 @@ export const DonutChart = ({ data, title, height = 300 }: DonutChartProps) => {
     "#EF4444",
   ];
 
+  // Filter out zero values and validate data
+  const validData = data.filter((item) => item && item.name && item.value > 0);
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -45,13 +41,22 @@ export const DonutChart = ({ data, title, height = 300 }: DonutChartProps) => {
       style={{ height: `${height}px` }}
       className="flex items-center justify-center bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg border border-yellow-100"
     >
-      {data.length === 0 ? (
+      {validData.length === 0 ? (
         <div className="text-center">
           <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mb-4 mx-auto">
             <span className="text-2xl">🍩</span>
           </div>
           <p className="text-[#262626] font-medium text-lg mb-2">{title}</p>
-          <p className="text-[#6B7280] text-sm">No data available</p>
+          <p className="text-[#6B7280] text-sm">
+            {data.length === 0
+              ? "No data available"
+              : "No valid data to display"}
+          </p>
+          {process.env.NODE_ENV === "development" && (
+            <p className="text-xs text-gray-400 mt-2">
+              Debug: {data.length} items, {validData.length} valid
+            </p>
+          )}
         </div>
       ) : (
         <div className="w-full h-full p-4">
@@ -59,7 +64,7 @@ export const DonutChart = ({ data, title, height = 300 }: DonutChartProps) => {
           <ResponsiveContainer width="100%" height={height - 100}>
             <PieChart>
               <Pie
-                data={processedData}
+                data={validData}
                 cx="50%"
                 cy="50%"
                 innerRadius={60}
@@ -67,7 +72,7 @@ export const DonutChart = ({ data, title, height = 300 }: DonutChartProps) => {
                 paddingAngle={2}
                 dataKey="value"
               >
-                {processedData.map((entry, index) => (
+                {validData.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={colors[index % colors.length]}

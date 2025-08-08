@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { loadReportData } from "@/lib/data";
-import { LineChart, DonutChart } from "@/components/Charts";
-import { ChartContainer } from "@/components/Dashboard";
+import { LineChart, DonutChart, ChartWrapper } from "@/components/Charts";
+import { ChartDataProcessor } from "@/lib/utils/chartDataProcessor";
+import { extractFinancialSummary } from "@/lib/utils/reportDataProcessing";
+import { ReportData } from "@/types/data";
 
 type PeriodType = "monthly" | "quarterly" | "yearly";
 
@@ -17,7 +19,7 @@ const periods = [
 export default function ReportPage() {
   const [currentPeriod, setCurrentPeriod] = useState<PeriodType>("monthly");
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
-  const [data, setData] = useState<Record<string, unknown> | null>(null);
+  const [data, setData] = useState<ReportData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,7 +29,7 @@ export default function ReportPage() {
         setLoading(true);
         setError(null);
         const result = await loadReportData();
-        setData(result);
+        setData(result as unknown as ReportData);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load data");
       } finally {
@@ -58,18 +60,40 @@ export default function ReportPage() {
   };
 
   // Extract financial summary data
-  const getFinancialSummary = () => {
-    if (!data) return { cashAtBank: 0, revenue: 0, expenses: 0 };
+  const financialSummary = extractFinancialSummary(data);
 
-    // Extract from the first available data or use defaults
-    const cashAtBank = 125000; // Default value
-    const revenue = 250000; // Default value
-    const expenses = 180000; // Default value
+  // Generate date array for charts
+  const dateArray = ChartDataProcessor.generateReportDateArray(
+    data,
+    currentPeriod
+  );
 
-    return { cashAtBank, revenue, expenses };
-  };
+  // Get processed chart data using the standardized processor
+  const revenueDonutData = ChartDataProcessor.getReportDonutChartData(
+    data,
+    "Total Revenues",
+    currentPeriod,
+    8
+  );
 
-  const financialSummary = getFinancialSummary();
+  const expensesDonutData = ChartDataProcessor.getReportDonutChartData(
+    data,
+    "Total Expenses",
+    currentPeriod,
+    8
+  );
+
+  const revenueLineData = ChartDataProcessor.getReportLineChartData(
+    data,
+    "Total Revenues",
+    currentPeriod
+  );
+
+  const expensesLineData = ChartDataProcessor.getReportLineChartData(
+    data,
+    "Total Expenses",
+    currentPeriod
+  );
 
   return (
     <motion.div
@@ -184,7 +208,7 @@ export default function ReportPage() {
                 <h4 className="font-semibold text-[#262626] mb-3 text-lg">
                   Cash at Bank
                 </h4>
-                <p className="text-3xl font-bold text-[#B09280] mb-2">
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#B09280] mb-2 break-words">
                   {formatCurrency(financialSummary.cashAtBank)}
                 </p>
                 <p className="text-[#6B7280]">Current balance</p>
@@ -198,7 +222,7 @@ export default function ReportPage() {
                 <h4 className="font-semibold text-[#262626] mb-3 text-lg">
                   Total Revenue
                 </h4>
-                <p className="text-3xl font-bold text-[#698AC5] mb-2">
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#698AC5] mb-2 break-words">
                   {formatCurrency(financialSummary.revenue)}
                 </p>
                 <p className="text-[#6B7280]">This period</p>
@@ -212,7 +236,7 @@ export default function ReportPage() {
                 <h4 className="font-semibold text-[#262626] mb-3 text-lg">
                   Total Expenses
                 </h4>
-                <p className="text-3xl font-bold text-[#EAE62F] mb-2">
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#EAE62F] mb-2 break-words">
                   {formatCurrency(financialSummary.expenses)}
                 </p>
                 <p className="text-[#6B7280]">This period</p>
@@ -266,20 +290,21 @@ export default function ReportPage() {
                   className="pt-6"
                 >
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <ChartContainer title="Revenue Trend">
+                    <ChartWrapper title="Revenue Trend">
                       <LineChart
-                        data={[]}
+                        data={revenueLineData}
                         title="Revenue Over Time"
                         height={300}
+                        dateArray={dateArray}
                       />
-                    </ChartContainer>
-                    <ChartContainer title="Revenue by Category">
+                    </ChartWrapper>
+                    <ChartWrapper title="Revenue by Category">
                       <DonutChart
-                        data={[]}
+                        data={revenueDonutData}
                         title="Revenue Breakdown"
                         height={300}
                       />
-                    </ChartContainer>
+                    </ChartWrapper>
                   </div>
                 </motion.div>
               )}
@@ -324,20 +349,21 @@ export default function ReportPage() {
                   className="pt-6"
                 >
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <ChartContainer title="Expense Trend">
+                    <ChartWrapper title="Expense Trend">
                       <LineChart
-                        data={[]}
+                        data={expensesLineData}
                         title="Expenses Over Time"
                         height={300}
+                        dateArray={dateArray}
                       />
-                    </ChartContainer>
-                    <ChartContainer title="Expense Breakdown">
+                    </ChartWrapper>
+                    <ChartWrapper title="Expense Breakdown">
                       <DonutChart
-                        data={[]}
+                        data={expensesDonutData}
                         title="Expenses by Category"
                         height={300}
                       />
-                    </ChartContainer>
+                    </ChartWrapper>
                   </div>
                 </motion.div>
               )}

@@ -155,5 +155,5 @@ const handleKeyDown = (event: KeyboardEvent) => {
 ```
 description:
 globs:
-alwaysApply: false
+alwaysApply: true
 ---

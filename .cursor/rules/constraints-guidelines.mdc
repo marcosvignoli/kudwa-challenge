@@ -1,0 +1,184 @@
+---
+alwaysApply: true
+---
+## 🏗️ **Technical Constraints**
+
+### **Architecture Rules**
+- **Keep current file structure** (working well)
+- **Component abstraction**: If written twice → component
+- **No components inside components** - each in own file
+- **Keep it simple** - avoid extra complexity
+- **SOLID principles** for code organization
+
+### **Code Quality Standards**
+- **Readable, maintainable, scalable, modularized, simple, commented**
+- **NO code duplication**
+- **Use React.memo, useCallback, useMemo for performance**
+- **Error boundaries and fallbacks required**
+
+### **Dependencies**
+- **Only add dependencies if challenge requires it**
+- **Prefer existing packages in package.json**
+- **Avoid unnecessary libraries**
+
+---
+
+## 🎨 **Design & UX Constraints**
+
+### **Brand Compliance**
+- **Use EXACTLY the provided Kudwa colors**:
+  - `#B09280` (Primary Brown)
+  - `#EAE62F` (Accent Yellow)
+  - `#698AC5` (Secondary Blue)
+  - `#262626` (Dark Gray)
+  - `#FBFAFA` (Light Background)
+
+### **Animation & UX**
+- **Minimal to moderate animations only**
+- **Don't overload with movement**
+- **Keep dynamics enough**
+- **Mobile-optimized design**
+- **Loading spinners for loading states**
+- **User feedback for error handling**
+
+---
+
+## 📊 **Data & Performance Constraints**
+
+### **Data Handling**
+- **Use data exactly as provided - NEVER modify**
+- **Implement data caching and optimization**
+- **Use React.memo, useCallback, useMemo**
+- **Minimize re-renders**
+- **Follow React best practices for performance**
+
+### **Performance Standards**
+- **Everything works smooth without errors**
+- **Implement performance optimizations as needed**
+- **Follow web performance standards**
+- **Check challenge requirements for specific benchmarks**
+
+---
+
+## 🧪 **Testing & Quality Constraints**
+
+### **Testing Requirements**
+- **Challenge requires testing - implement it**
+- **Use Jest and React Testing Library**
+- **Level based on challenge description**
+- **Focus on critical functionality**
+
+### **Quality Standards**
+- **Production-ready = all challenge requirements met + no UI errors**
+- **Zero tolerance for bugs**
+- **Error boundaries and fallbacks required**
+- **Check challenge requirements for quality metrics**
+
+---
+
+## 🚀 **Deployment Constraints**
+
+### **Platform**
+- **Vercel deployment**
+- **User will deploy manually**
+- **Ensure deployment-ready code**
+
+### **Documentation**
+- **Best possible documentation**
+- **Help anyone reading the code understand what's happening**
+- **Clear, comprehensive comments**
+
+---
+
+## 🚨 **Red Flags - STOP IMMEDIATELY**
+
+### **If You're Doing Any of These:**
+- **Adding features not in challenge requirements**
+- **Making assumptions about requirements**
+- **Over-engineering solutions**
+- **Being fancy instead of functional**
+- **Adding unnecessary complexity**
+- **Spending more than 2 hours on a feature**
+- **Creating components that aren't needed**
+
+### **When You See Red Flags:**
+1. **Stop immediately**
+2. **Simplify the approach**
+3. **Focus on challenge requirements only**
+4. **Use existing patterns**
+5. **Move to next priority**
+
+---
+
+## 🎯 **Implementation Priorities**
+
+### **Phase 1: Critical Fixes (Tonight)**
+1. **Report Page Data Integration** - Make charts show real data
+2. **Redux Toolkit Implementation** - Required by challenge
+3. **Testing Implementation** - Required by challenge
+
+### **Phase 2: Quality Assurance (Tonight)**
+4. **Performance Optimization** - React.memo, useCallback, useMemo
+5. **Error Boundaries** - Proper error handling
+6. **Mobile Optimization** - Ensure responsive design
+
+### **Phase 3: Final Polish (Tomorrow Morning)**
+7. **Documentation** - Comprehensive code comments
+8. **Final Testing** - Ensure everything works
+9. **Deployment Preparation** - Vercel-ready
+
+---
+
+## 📝 **Decision Making Framework**
+
+### **Before Any Implementation, Ask:**
+1. **Is this in the challenge requirements?** → If NO, don't do it
+2. **Is this the simplest way to meet requirements?** → If NO, simplify
+3. **Will this take more than 2 hours?** → If YES, break it down
+4. **Is this necessary for functionality?** → If NO, skip it
+
+### **When in Doubt:**
+- **Choose the simpler solution**
+- **Use existing patterns**
+- **Focus on challenge requirements only**
+- **Prioritize working over perfect**
+
+---
+
+## 🎯 **Success Criteria**
+
+### **Must Achieve:**
+- ✅ All challenge requirements implemented
+- ✅ No UI errors
+- ✅ Smooth performance
+- ✅ Mobile responsive
+- ✅ Professional appearance
+- ✅ Clean, readable code
+- ✅ Ready for Vercel deployment
+
+### **Not Success Criteria:**
+- ❌ Perfect performance optimization
+- ❌ Advanced features beyond requirements
+- ❌ Complex animations
+- ❌ Over-engineered solutions
+
+---
+
+## 🚀 **Overnight Development Strategy**
+
+### **Tonight (22:00 - 06:00)**
+- **Focus on core functionality**
+- **Implement challenge requirements only**
+- **Maintain quality while moving fast**
+- **Use existing patterns and components**
+
+### **Tomorrow Morning (06:00 - Submission)**
+- **Final testing and bug fixes**
+- **Documentation completion**
+- **Deployment preparation**
+- **Quality assurance**
+
+**Remember: The goal is to submit a working application that meets ALL challenge requirements by tomorrow morning. Focus on functionality over perfection.**
+
+alwaysApply: true
+---

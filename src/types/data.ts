@@ -46,7 +46,94 @@ export interface DashboardState {
   error: string | null;
 }
 
-export interface ReportData {
-  // Will be defined based on report.json structure
+// Report Data Interfaces
+export interface ReportActualData {
+  id: number;
+  topLevelFieldId: number | null;
+  fieldId: number;
+  value: number[];
+  codatAccountId: string;
+  integrationSourceId: number;
+  source: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ReportField {
+  id: number;
+  topLevelFieldId: number;
+  name: string;
+  code: string | null;
+  uniqueReference: {
+    sheetType: string;
+    integrationSourceId: number;
+    sourceType: string;
+    accountId: string;
+    accountName: string;
+    metric: boolean;
+  };
+  order: number | null;
+  description: string | null;
+  style: string | null;
+  fieldType: string | null;
+  createdAt: string;
+  updatedAt: string;
+  fieldId: number | null;
+  outputs: unknown[];
+  actualData: ReportActualData[];
+}
+
+export interface ReportProfitLossItem {
+  id: number;
+  financialReportId: number;
+  name: string;
+  type: string;
+  description: string | null;
+  style: string | null;
+  createdAt: string;
+  updatedAt: string;
+  outputs: unknown[];
+  actualData: ReportActualData[];
+  fields: ReportField[];
+  pastMonth: unknown;
+  quarterly: unknown;
+  quarterlyPastMonth: unknown;
+  quarterlyResult: unknown;
+  result: unknown;
+  totalResult: unknown;
+  yearly: unknown;
+  yearlyPastMonth: unknown;
+  yearlyResult: unknown;
+}
+
+export interface ReportMetrics {
+  // Add metrics structure when needed
   [key: string]: unknown;
+}
+
+export interface ReportComputedFields {
+  // Add computed fields structure when needed
+  [key: string]: unknown;
+}
+
+export interface ReportData {
+  reportResult: {
+    id: number;
+    scenarioId: number;
+    startingDate: string;
+    endingDate: string;
+    createdAt: string;
+    updatedAt: string;
+    profitnLoss: ReportProfitLossItem[];
+    metrics: ReportMetrics;
+    computedFields: ReportComputedFields;
+  };
+}
+
+export interface ReportState {
+  currentPeriod: PeriodType;
+  data: ReportData | null;
+  loading: boolean;
+  error: string | null;
+  expandedSections: string[];
 }

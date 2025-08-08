@@ -6,6 +6,7 @@ import { loadDashboardData } from "@/lib/data";
 import { MainDashboardData } from "@/types/data";
 import { LineChart, DonutChart } from "@/components/Charts";
 import { MetricCard, ChartContainer } from "@/components/Dashboard";
+import { ChartDataProcessor } from "@/lib/utils/chartDataProcessor";
 
 type PeriodType = "monthly" | "quarterly" | "yearly";
 
@@ -50,11 +51,6 @@ export default function DashboardPage() {
   const getKPIData = () => {
     if (!data?.mainDashboardKPIs?.topKPIs) return [];
     return data.mainDashboardKPIs.topKPIs;
-  };
-
-  const getChartData = (chartKey: string) => {
-    if (!data?.mainDashboard?.charts?.[chartKey]) return [];
-    return data.mainDashboard.charts[chartKey];
   };
 
   const getDateArray = () => {
@@ -209,7 +205,10 @@ export default function DashboardPage() {
           >
             <ChartContainer title="Cash at Bank Trend">
               <LineChart
-                data={getChartData("cashAtBank")}
+                data={ChartDataProcessor.getDashboardLineChartData(
+                  data,
+                  "cashAtBank"
+                )}
                 title="Cash at Bank Over Time"
                 height={300}
                 dateArray={getDateArray()}
@@ -217,7 +216,11 @@ export default function DashboardPage() {
             </ChartContainer>
             <ChartContainer title="Expense Breakdown">
               <DonutChart
-                data={getChartData("expenseSplit")}
+                data={ChartDataProcessor.getDashboardDonutChartData(
+                  data,
+                  "expenseSplit",
+                  8
+                )}
                 title="Expenses by Category"
                 height={300}
               />
@@ -233,14 +236,21 @@ export default function DashboardPage() {
           >
             <ChartContainer title="Revenue Split">
               <DonutChart
-                data={getChartData("totalRevenuesSplit")}
+                data={ChartDataProcessor.getDashboardDonutChartData(
+                  data,
+                  "totalRevenuesSplit",
+                  8
+                )}
                 title="Revenue by Category"
                 height={300}
               />
             </ChartContainer>
             <ChartContainer title="Profit & Loss Overview">
               <LineChart
-                data={getChartData("profitLossOverview")}
+                data={ChartDataProcessor.getDashboardLineChartData(
+                  data,
+                  "profitLossOverview"
+                )}
                 title="Profit & Loss Over Time"
                 height={300}
                 dateArray={getDateArray()}
